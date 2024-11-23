@@ -1,5 +1,6 @@
 from flask import Flask, render_template, jsonify, request
 from fuzzywuzzy import fuzz, process
+import os
 
 app = Flask(__name__)
 
@@ -24,12 +25,12 @@ services_data = [
 
 # General responses/questions
 general_responses = {
-    "hi": "Hello! How can I assist you today?",
-    "hello": "Hi there! Feel free to ask me about any of our services.",
-    "contact": "You can contact us at +51 987 632 686.",
-    "location": "We are located at 123 Main Street, Lima, Peru.",
-    "services": "We offer a range of services such as Facial Cleansing, Hydrafacial, Mesotherapy, and more.",
-    "price": "The price for each service depends on the type and session duration. Please contact us for more details."
+    "hi": "Hello! How can I assist you today? 😊",
+    "hello": "Hi there! Feel free to ask me about any of our services. 🌟",
+    "contact": "📞 You can contact us at +51 987 632 686.",
+    "location": "📍 We are located at 123 Main Street, Lima, Peru.",
+    "services": "💆 We offer a range of services such as Facial Cleansing, Hydrafacial, Mesotherapy, and more.",
+    "price": "💵 The price for each service depends on the type and session duration. Please contact us for more details."
 }
 
 # Store user conversation state
@@ -64,7 +65,7 @@ def home():
 
 @app.route("/get-response", methods=["POST"])
 def get_response():
-    user_message = request.json.get("message").lower()  # Get the user's message and convert it to lowercase
+    user_message = request.json.get("message", "").lower()  # Get the user's message and convert it to lowercase
     user_id = request.remote_addr  # Using the user's IP as a temporary user identifier
 
     if user_id not in user_conversations:
@@ -76,7 +77,7 @@ def get_response():
     detected_service = detect_closest_service(user_message)
     if detected_service:
         conversation["service"] = detected_service['name']
-        response = f"Great! You have selected {detected_service['name']}. Please select a date for the appointment using the calendar below."
+        response = f"Great! You have selected {detected_service['name']}. Please select a date for the appointment using the calendar below. 📅"
         conversation["state"] = "awaiting_date"
         return jsonify({"response": response})
 
@@ -87,17 +88,17 @@ def get_response():
         return jsonify({"response": general_response})
 
     # Default response if no match
-    return jsonify({"response": "I didn't quite get that. Could you ask again or select a service?"})
+    return jsonify({"response": "🤔 I didn't quite get that. Could you ask again or select a service?"})
 
 @app.route("/submit-appointment", methods=["POST"])
 def submit_appointment():
-    user_message = request.json.get("message").lower()
+    user_message = request.json.get("message", "").lower()
     user_id = request.remote_addr  # Using the user's IP as a temporary user identifier
     conversation = user_conversations.get(user_id, None)
 
     if conversation and conversation["state"] == "awaiting_date":
         conversation["date"] = user_message
-        response = f"Thank you! You are booking {conversation['service']} on {conversation['date']}. I will now confirm the details via WhatsApp."
+        response = f"Thank you! 🙏 You are booking {conversation['service']} on {conversation['date']}. I will now confirm the details via WhatsApp."
 
         # Send WhatsApp booking message link
         whatsapp_message = f"I would like to book an appointment for {conversation['service']} on {conversation['date']}."
@@ -106,7 +107,8 @@ def submit_appointment():
         conversation["state"] = "completed"
         return jsonify({"response": response, "whatsapp_link": whatsapp_link})
 
-    return jsonify({"response": "Please enter a valid date for the appointment."})
+    return jsonify({"response": "⚠️ Please enter a valid date for the appointment."})
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))  # Use the PORT environment variable or default to 5000
+    app.run(host="0.0.0.0", port=port, debug=True)
