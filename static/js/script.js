@@ -34,7 +34,7 @@ const services = [
             sideEffects: "Puede causar hinchazón, enrojecimiento o pequeñas molestias en el área tratada, que desaparecen en pocos días",
             
             whatsappMessage: "I would like to book an appointment for PRP.",
-            image: "static/images/4. Plasma Rico en plaquetas/1.png"
+            image: "static/images/4. Plasma Rico en Plaquetas/2.png"
         },
         {
             name: "Ácido Hialurónico",
