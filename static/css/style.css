@@ -1,161 +1,124 @@
-/* General body and container styling */
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body Styling */
 body {
     font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
-    color: #343a40;
-    background-image: url('static/images/bgimage.jpg'); /* Add background image here */
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    overflow: hidden; /* Prevent unnecessary scrolling */
+    background-color: #f8f9fa; /* Clean light grey background */
+    color: #333; /* Text color */
 }
 
-/* Add a clean, semi-transparent overlay effect */
-.container-fluid {
-    background-color: rgba(255, 255, 255, 0.9); /* White with slight transparency */
-    padding: 15px;
-    border-radius: 15px;
-    margin-top: 5px;
-    transition: all 0.3s ease-in-out; /* Smooth transition for container */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add subtle shadow */
+/* Main Container: Single Block for Entire Project */
+.main-container {
+    max-width: 1200px; /* Limits content width */
+    margin: 30px auto; /* Center the block with spacing */
+    padding: 20px;
+    background-color: #ffffff; /* White background for the block */
+    border-radius: 12px; /* Smooth edges */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* Subtle shadow for the block */
+    overflow: hidden; /* Prevent overflow issues */
 }
 
-/* Language Toggle Button Styling */
-#language-toggle-btn {
-    margin: 10px 0;
-    padding: 8px 12px;
-    font-size: 0.9rem;
-    border-radius: 5px;
-}
-
-/* Page title */
+/* Page Title */
 .page-title {
-    font-size: 2rem;
-    color: #333; /* Neutral dark color */
-    font-weight: bold;
-    margin-bottom: 40px;
+    font-size: 2.5rem;
     text-align: center;
-    transition: all 0.3s ease-in-out; /* Smooth transition for text */
+    color: #007bff; /* Blue color */
+    margin-bottom: 20px;
+    font-weight: bold;
 }
 
-/* Main layout */
+/* Main Content Layout */
 .main-content {
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
-    align-items: flex-start;
-    height: 80vh; /* Make the content fill most of the viewport height */
-    overflow: hidden; /* Remove unnecessary scrolling */
+    gap: 20px;
+    flex-wrap: wrap; /* Ensures responsiveness */
 }
 
+/* Left Content: Service Cards */
 .left-content {
     flex: 1;
-    padding-right: 15px;
+    min-width: 300px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    overflow-y: auto;
-    transition: all 0.3s ease-in-out;
+    gap: 20px;
+    padding: 10px;
 }
 
-.right-content {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    transition: all 0.3s ease-in-out;
-}
-
-@media (max-width: 768px) {
-    .main-content {
-        flex-direction: column;
-        height: auto; /* Let the content adjust based on its height */
-    }
-
-    .left-content,
-    .right-content {
-        width: 100%;
-    }
-
-    .right-content {
-        margin-top: 20px;
-    }
-}
-
-/* Service card styling */
-#service-card-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    overflow-y: auto;
-    transition: opacity 0.5s ease-in-out; /* Smooth transition for card fade effect */
-    opacity: 1; /* Default opacity for the fade effect */
-}
-
+/* Service Card Styling */
 .service-card {
     width: 100%;
-    max-width: 300px;
-    margin-bottom: 20px;
+    max-width: 350px;
+    margin: 0 auto;
     padding: 15px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
     border-radius: 10px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     text-align: center;
-    background-color: white;
     transition: all 0.3s ease-in-out;
 }
 
 .service-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
 }
 
-.card-title {
-    font-size: 1.25rem;
-    font-weight: bold;
-    color: #333; /* Neutral color */
-    padding: 10px;
-    line-height: 1.2;
-}
-
-/* Image styling */
 .service-card img {
     width: 100%;
     height: auto;
-    margin-top: 10px;
     border-radius: 10px;
-    border: 1px solid #ddd;
-    padding: 5px;
-    transition: all 0.3s ease-in-out;
+    margin-bottom: 10px;
 }
 
-.service-card img:hover {
-    transform: scale(1.05);
+.card-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #007bff;
 }
 
-/* Chatbot styling */
+/* Right Content: Chatbot */
+.right-content {
+    flex: 1;
+    min-width: 300px;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+}
+
 #chat-container {
     width: 100%;
     max-width: 400px;
-    border-radius: 15px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     overflow: hidden;
-    background-color: white;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-    transition: all 0.3s ease-in-out;
 }
 
 .chatbot-title {
-    color: #333; /* Neutral dark color */
+    text-align: center;
+    background-color: #007bff;
+    color: #ffffff;
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 10px;
 }
 
 #chat-box {
     height: 400px;
     overflow-y: auto;
     padding: 15px;
-    background-color: #ffffff;
-    transition: all 0.5s ease;
+    background-color: #f8f9fa;
     scroll-behavior: smooth;
+    border-bottom: 1px solid #ddd;
 }
 
 .message {
@@ -170,73 +133,87 @@ body {
     background-color: #007bff;
     color: white;
     align-self: flex-end;
-    transition: all 0.3s ease-in-out;
-    box-shadow: 0px 3px 8px rgba(0, 123, 255, 0.2);
 }
 
 .bot-response {
     background-color: #e9ecef;
     color: #333;
     align-self: flex-start;
-    transition: all 0.3s ease-in-out;
-    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.1);
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
-/* Remove pink and keep neutral calendar styling */
-input[type="date"] {
-    padding: 8px;
-    font-size: 0.9rem;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    width: 100%;
-    transition: all 0.3s ease-in-out;
-}
-
-input[type="date"]:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
-}
-
-/* Styling for options */
-.options-container {
+/* Input Field and Button */
+.input-group {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 10px;
-    gap: 6px;
-    flex-wrap: nowrap;
+    padding: 10px;
+    background-color: #f1f1f1;
 }
 
-.option-btn {
-    padding: 4px 8px;
-    font-size: 0.75rem;
-    border-radius: 15px;
-    transition: all 0.3s ease-in-out;
-    box-shadow: none;
+#user-input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px 0 0 5px;
+    font-size: 1rem;
 }
 
-.option-btn:hover {
+#send-button {
     background-color: #007bff;
-    color: white;
-    border-color: #007bff;
-    transform: translateY(-2px);
+    color: #ffffff;
+    border: none;
+    padding: 8px 15px;
+    font-size: 1rem;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
 }
 
-/* Assistant image */
-.assistant-image {
-    width: 100%;
-    max-width: 130px;
-    border-radius: 10px;
-    margin: 15px auto 0 auto;
-    display: block;
-    transition: all 0.3s ease-in-out;
+#send-button:hover {
+    background-color: #0056b3;
 }
 
-.assistant-image:hover {
-    transform: scale(1.05);
+/* Footer Styling */
+.footer {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .main-content {
+        flex-direction: column;
+    }
+
+    .left-content,
+    .right-content {
+        width: 100%;
+    }
+
+    .page-title {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .service-card {
+        max-width: 100%;
+    }
+
+    .chatbot-title {
+        font-size: 1.2rem;
+    }
+
+    #send-button {
+        font-size: 0.9rem;
+    }
 }
