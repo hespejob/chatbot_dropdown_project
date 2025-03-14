@@ -134,4 +134,6 @@ def submit_appointment():
     return jsonify({"response": response, "whatsapp_link": whatsapp_link})
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    # Bind to the appropriate host and port for Render
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=True)
