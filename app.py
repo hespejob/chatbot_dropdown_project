@@ -2,7 +2,7 @@ from flask import Flask, render_template, jsonify, request
 from fuzzywuzzy import fuzz, process
 import requests
 
-app = Flask(_name_)
+app = Flask(__name__)
 
 # =========================
 # 1. DATA & CONFIG
@@ -133,5 +133,5 @@ def submit_appointment():
     whatsapp_link = "https://api.whatsapp.com/send?phone=51987632686&text=Booking%20confirmation"
     return jsonify({"response": response, "whatsapp_link": whatsapp_link})
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     app.run(debug=True)
