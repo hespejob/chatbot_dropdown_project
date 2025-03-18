@@ -32,7 +32,7 @@ services_data = [
 general_responses = {
     "hi": "Hello! How can I assist you today?",
     "hello": "Hi there! Feel free to ask me about any of our services.",
-    "contact": "You can contact us at +51 987 632 686.",
+    "contact": "You can contact us at +51 981640627.",
     "location": "We are located at 123 Main Street, Lima, Peru.",
     "services": "We offer a range of services such as Facial Cleansing, Hydrafacial, Mesotherapy, and more.",
     "price": "The price for each service depends on the type and session duration. Please contact us for more details."
@@ -42,36 +42,34 @@ general_responses = {
 # 2. GEMINI CONFIG & HELPER
 # =========================
 
-GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=YOUR_API_KEY"
-GEMINI_API_KEY = "YOUR_ACTUAL_GEMINI_API_KEY"
+GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
+GEMINI_API_KEY = "AIzaSyCocRQfyEnaKBB7bsHvgYO9hkeKSPN0pFI"  # Reemplaza con tu clave real
 
 def get_gemini_response(prompt):
     """
-    Send the user prompt to Gemini 2.0 Flash and return the generated text.
-    Adjust keys or JSON structure as needed based on your actual Gemini response.
+    Send the prompt to Gemini API and return the AI-generated response.
     """
+    url = f"https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}"
+    
     payload = {
-        "prompt": prompt,
-        "max_tokens": 100,
-        "temperature": 0.7
+        "contents": [{"parts": [{"text": prompt}]}]  # Correct payload format
     }
+
     headers = {
-        "Authorization": f"Bearer {GEMINI_API_KEY}",
         "Content-Type": "application/json"
     }
     
     try:
-        response = requests.post(GEMINI_API_URL, json=payload, headers=headers)
+        response = requests.post(url, json=payload, headers=headers)
         if response.status_code == 200:
             data = response.json()
-            # Adjust "response_text" if your Gemini API returns a different JSON key
-            return data.get("response_text", "Lo siento, no pude obtener una respuesta de Gemini.")
+            return data["candidates"][0]["content"]["parts"][0]["text"]  # Extract response
         else:
+            print("Gemini API error:", response.status_code, response.text)
             return "Lo siento, algo salió mal al obtener la respuesta de Gemini."
     except Exception as e:
         print("Error calling Gemini API:", e)
         return "Lo siento, actualmente no puedo responder esa pregunta."
-
 
 # =========================
 # 3. FUZZY MATCHING HELPERS
@@ -114,13 +112,21 @@ def home():
 @app.route("/gemini-api", methods=["POST"])
 def gemini_api():
     """
-    This endpoint is called from the front end (script.js) when no service or known general response is found.
-    We pass the user’s message to Gemini and return the AI-generated text.
+    Handles chatbot fallback requests to Gemini API.
     """
-    data = request.get_json()
-    user_prompt = data.get("message", "")
-    gemini_resp = get_gemini_response(user_prompt)
-    return jsonify({"response": gemini_resp})
+    try:
+        data = request.get_json()
+        user_prompt = data.get("message", "").strip()
+        if not user_prompt:
+            return jsonify({"response": "Lo siento, no recibí una pregunta válida."})
+
+        gemini_resp = get_gemini_response(user_prompt)
+        return jsonify({"response": gemini_resp})
+
+    except Exception as e:
+        print("Flask API Error:", e)
+        return jsonify({"response": "Lo siento, algo salió mal en el servidor."})
+
 
 @app.route("/submit-appointment", methods=["POST"])
 def submit_appointment():
@@ -131,7 +137,7 @@ def submit_appointment():
     # For example, you can store the user's chosen date, etc.
     # Then build a response or link to WhatsApp.
     response = "Thank you! I will now confirm the details via WhatsApp."
-    whatsapp_link = "https://api.whatsapp.com/send?phone=51987632686&text=Booking%20confirmation"
+    whatsapp_link = "https://api.whatsapp.com/send?phone=51981640627&text=Booking%20confirmation"
     return jsonify({"response": response, "whatsapp_link": whatsapp_link})
 
 if __name__ == "__main__":
