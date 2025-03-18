@@ -190,13 +190,65 @@ function displayMessage(message, className) {
 }
 
 // =========================
-// 3A. FUZZY MATCHING
+// 3A. IMPROVED FUZZY MATCHING FOR SENTENCES
 // =========================
 
+// Function to calculate Levenshtein Distance (Edit Distance)
+function levenshtein(a, b) {
+    const tmp = [];
+    for (let i = 0; i <= b.length; i++) {
+        tmp[i] = [i];
+    }
+    for (let j = 0; j <= a.length; j++) {
+        tmp[0][j] = j;
+    }
+    for (let i = 1; i <= b.length; i++) {
+        for (let j = 1; j <= a.length; j++) {
+            if (b.charAt(i - 1) === a.charAt(j - 1)) {
+                tmp[i][j] = tmp[i - 1][j - 1];
+            } else {
+                tmp[i][j] = Math.min(tmp[i - 1][j - 1] + 1, Math.min(tmp[i][j - 1] + 1, tmp[i - 1][j] + 1));
+            }
+        }
+    }
+    return tmp[b.length][a.length];
+}
+
+// Function to find the closest service name inside a sentence
+function findClosestService(userMessage) {
+    let bestMatch = null;
+    let bestScore = Infinity;
+
+    const words = userMessage.toLowerCase().split(/\s+/); // Split sentence into words
+
+    services.forEach(service => {
+        const serviceName = service.name.toLowerCase();
+
+        words.forEach(word => {
+            const distance = levenshtein(word, serviceName);
+            if (distance < bestScore) {
+                bestScore = distance;
+                bestMatch = service;
+            }
+        });
+    });
+
+    // If the best match is close enough (threshold), return it
+    return bestScore <= 3 ? bestMatch : null;
+}
+
+// Improved function to detect services even inside a sentence
 function detectServiceInMessage(userMessage) {
     const lowerCaseMessage = userMessage.toLowerCase();
-    return services.find(service => lowerCaseMessage.includes(service.name.toLowerCase()));
+    
+    // Check if any service name appears in the sentence exactly
+    const detectedService = services.find(service => lowerCaseMessage.includes(service.name.toLowerCase()));
+    if (detectedService) return detectedService;
+    
+    // If no exact match, use fuzzy matching
+    return findClosestService(userMessage);
 }
+
 
 function generateServiceResponse(userMessage, service) {
     const lowerCaseMessage = userMessage.toLowerCase();
@@ -222,7 +274,7 @@ function generateServiceResponse(userMessage, service) {
 const generalResponses = {
     "hola": "👋 ¡Hola! Soy el chatbot LOOKATME 🤖 ¿En qué puedo ayudarte hoy?",
     "saludo": "👋 ¡Hola! Soy el chatbot LOOKATME 🤖 Pregúntame sobre cualquiera de nuestros servicios o tratamientos.",
-    "contacto": "📞 Puedes contactarnos al +51 987 632 686 para más información.",
+    "contacto": "📞 Puedes contactarnos al +51 981640627 para más información.",
     "ubicación": "📍 Estamos ubicados en la Calle Principal 123, Lima, Perú. ¡Ven a visitarnos!",
     "ubicacion": "📍 Estamos ubicados en la Calle Principal 123, Lima, Perú. ¡Ven a visitarnos!",
     "si": "😊 Pregunta por cualquier servicio que quieras reservar",
@@ -230,9 +282,9 @@ const generalResponses = {
     "precio": "💰 El precio de cada servicio depende del tipo y duración. Contáctanos para obtener más información detallada.",
     "gracias": "😊 ¡De nada! No dudes en preguntar si tienes más preguntas.",
     "email": "😊 Puedes contactarnos en el correo electrónico estetic-lookatme@gmail.com. ✉️",
-    "whatsapp": "😊 Puedes contactarnos a través de nuestro número de WhatsApp: +51 987632686.",
+    "whatsapp": "😊 Puedes contactarnos a través de nuestro número de WhatsApp: +51 981640627.",
     "oferta": "🌟 Ofrecemos tratamientos como Botox, Hydrafacial, PRP y más. ¿En qué puedo ayudarte?",
-    "reservar": "🗓️ Puedes reservar una cita contactándonos al +51 987 632 686 o a través de nuestro sitio web.",
+    "reservar": "🗓️ Puedes reservar una cita contactándonos al +51 981640627 o a través de nuestro sitio web.",
     "horario": "⏰ Estamos abiertos de lunes a sábado, de 9 AM a 6 PM. ¿En qué podemos ayudarte?",
     "estacionamiento": "🚗 Sí, ofrecemos estacionamiento gratuito para todos nuestros clientes.",
     "caminar": "🚶‍♀️ Aceptamos visitas sin cita previa según disponibilidad, pero recomendamos reservar con anticipación.",
@@ -335,16 +387,18 @@ function callGeminiAPI(userMessage) {
         })
         .then(response => response.json())
         .then(data => {
-            // data.response should have the text from Gemini
-            resolve(data.response);
+            if (data.response) {
+                resolve(data.response);
+            } else {
+                resolve("Lo siento, no pude obtener una respuesta de Gemini.");
+            }
         })
         .catch(err => {
             console.error("Error calling /gemini-api:", err);
-            reject(err);
+            reject("Lo siento, hubo un error al obtener la respuesta.");
         });
     });
 }
-
 
 // =========================
 // 5. MAIN SEND MESSAGE
@@ -503,7 +557,7 @@ function handleOptionSelection(optionValue) {
         displayMessage("¿Qué servicio le gustaría seleccionar?", "bot-response");
         displayImage('static/images/fotor-ai-2024100710376.jpg');
     } else if (optionValue === 'personal-whatsapp') {
-        const whatsappURL = "https://wa.me/51999021693?text=Hello%2C%20I%20would%20like%20to%20inquire%20about%20your%20services.";
+        const whatsappURL = "https://wa.me/51981640627?text=Hello%2C%20I%20would%20like%20to%20inquire%20about%20your%20services.";
         window.open(whatsappURL, '_blank');
     } else if (optionValue === 'email-lookatme') {
         window.location.href = "mailto:estetic-lookatme@gmail.com?subject=Service Inquiry&body=Hello, I would like to know more about your services.";
@@ -517,7 +571,7 @@ function handleOptionSelection(optionValue) {
 
 function openCalendarPopup(serviceName) {
     // Option 1: Directly open a static Google Calendar link:
-    window.open('https://calendar.google.com/calendar/u/0/r/eventedit', '_blank');
+    window.open('https://calendar.app.google/DiFczsWq41uW7TnG6', '_blank');
     
     // Option 2 (more advanced): Pass the serviceName into a pre-filled Calendar event
     // (uncomment if you want to use pre-filled date/time)
