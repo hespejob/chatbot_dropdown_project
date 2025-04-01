@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, request, render_template, jsonify
 from fuzzywuzzy import fuzz, process
 import requests
 import os
@@ -6,10 +6,13 @@ import os
 app = Flask(__name__)
 
 # =========================
-# 1. DATA & CONFIG
+# 1. VERIFY TOKEN FOR WHATSAPP
 # =========================
+VERIFY_TOKEN = "tokenchatbot"
 
-# Service data for chatbot and cards
+# =========================
+# 2. SERVICES & GENERAL RESPONSES
+# =========================
 services_data = [
     {"name": "Facial Cleansing", "description": "Facial Cleansing helps deeply clean your skin, removing dirt and oils for clearer skin."},
     {"name": "Hydrafacial", "description": "Hydrafacial provides hydration and exfoliation, leaving your skin glowing and refreshed."},
@@ -28,119 +31,114 @@ services_data = [
     {"name": "Acne Treatment", "description": "Our acne treatments target the root causes of acne, leaving your skin clear and blemish-free."}
 ]
 
-# You can still keep or remove this dictionary if you wish.
 general_responses = {
     "hi": "Hello! How can I assist you today?",
     "hello": "Hi there! Feel free to ask me about any of our services.",
     "contact": "You can contact us at +51 981640627.",
     "location": "We are located at 123 Main Street, Lima, Peru.",
-    "services": "We offer a range of services such as Facial Cleansing, Hydrafacial, Mesotherapy, and more.",
-    "price": "The price for each service depends on the type and session duration. Please contact us for more details."
+    "services": "We offer services like Facial Cleansing, Hydrafacial, Mesotherapy, and more.",
+    "price": "Prices vary by service and duration. Contact us for full details."
 }
 
 # =========================
-# 2. GEMINI CONFIG & HELPER
+# 3. GEMINI API INTEGRATION
 # =========================
-
-GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
-GEMINI_API_KEY = "AIzaSyCocRQfyEnaKBB7bsHvgYO9hkeKSPN0pFI"  # Reemplaza con tu clave real
+GEMINI_API_KEY = "AIzaSyCocRQfyEnaKBB7bsHvgYO9hkeKSPN0pFI"
 
 def get_gemini_response(prompt):
-    """
-    Send the prompt to Gemini API and return the AI-generated response.
-    """
     url = f"https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}"
-    
-    payload = {
-        "contents": [{"parts": [{"text": prompt}]}]  # Correct payload format
-    }
+    payload = {"contents": [{"parts": [{"text": prompt}]}]}
+    headers = {"Content-Type": "application/json"}
 
-    headers = {
-        "Content-Type": "application/json"
-    }
-    
     try:
         response = requests.post(url, json=payload, headers=headers)
         if response.status_code == 200:
             data = response.json()
-            return data["candidates"][0]["content"]["parts"][0]["text"]  # Extract response
+            return data["candidates"][0]["content"]["parts"][0]["text"]
         else:
             print("Gemini API error:", response.status_code, response.text)
-            return "Lo siento, algo salió mal al obtener la respuesta de Gemini."
+            return "Sorry, an error occurred while fetching Gemini response."
     except Exception as e:
         print("Error calling Gemini API:", e)
-        return "Lo siento, actualmente no puedo responder esa pregunta."
+        return "Sorry, I can't respond at the moment."
 
 # =========================
-# 3. FUZZY MATCHING HELPERS
+# 4. FUZZY HELPERS
 # =========================
-
 def detect_closest_service(user_message):
-    """
-    Use fuzzy matching to find if the user's message references a known service.
-    """
-    user_message_lower = user_message.lower()
-    service_names = [service['name'] for service in services_data]
-    best_match, match_score = process.extractOne(user_message_lower, service_names, scorer=fuzz.token_sort_ratio)
-    if match_score > 60:  # threshold
-        for service in services_data:
-            if service['name'].lower() == best_match.lower():
-                return service
+    service_names = [s['name'] for s in services_data]
+    best_match, score = process.extractOne(user_message.lower(), service_names, scorer=fuzz.token_sort_ratio)
+    if score > 60:
+        for s in services_data:
+            if s['name'].lower() == best_match.lower():
+                return s
     return None
 
 def detect_closest_general_response(user_message):
-    """
-    Use fuzzy matching to find if the user's message references a known general question/response.
-    """
-    user_message_lower = user_message.lower()
-    best_match, match_score = process.extractOne(user_message_lower, general_responses.keys(), scorer=fuzz.token_sort_ratio)
-    if match_score > 60:
+    best_match, score = process.extractOne(user_message.lower(), general_responses.keys(), scorer=fuzz.token_sort_ratio)
+    if score > 60:
         return general_responses[best_match]
     return None
 
 # =========================
-# 4. ROUTES
+# 5. ROUTES FOR CHATBOT + WHATSAPP
 # =========================
 
-@app.route("/")
+@app.route('/')
 def home():
-    """
-    Render the main page (index.html) which loads your chatbot UI and service cards.
-    """
     return render_template("index.html", services=services_data)
 
-@app.route("/gemini-api", methods=["POST"])
+@app.route('/gemini-api', methods=['POST'])
 def gemini_api():
-    """
-    Handles chatbot fallback requests to Gemini API.
-    """
-    try:
-        data = request.get_json()
-        user_prompt = data.get("message", "").strip()
-        if not user_prompt:
-            return jsonify({"response": "Lo siento, no recibí una pregunta válida."})
+    data = request.get_json()
+    user_prompt = data.get("message", "").strip()
+    if not user_prompt:
+        return jsonify({"response": "No valid input received."})
+    reply = get_gemini_response(user_prompt)
+    return jsonify({"response": reply})
 
-        gemini_resp = get_gemini_response(user_prompt)
-        return jsonify({"response": gemini_resp})
-
-    except Exception as e:
-        print("Flask API Error:", e)
-        return jsonify({"response": "Lo siento, algo salió mal en el servidor."})
-
-
-@app.route("/submit-appointment", methods=["POST"])
+@app.route('/submit-appointment', methods=["POST"])
 def submit_appointment():
-    """
-    Example endpoint if you want to handle a booking flow in the back end.
-    """
-    user_message = request.json.get("message", "").lower()
-    # For example, you can store the user's chosen date, etc.
-    # Then build a response or link to WhatsApp.
     response = "Thank you! I will now confirm the details via WhatsApp."
     whatsapp_link = "https://api.whatsapp.com/send?phone=51981640627&text=Booking%20confirmation"
     return jsonify({"response": response, "whatsapp_link": whatsapp_link})
 
+@app.route('/webhook', methods=['GET', 'POST'])
+def webhook():
+    if request.method == 'GET':
+        # Verification from Meta dashboard
+        token = request.args.get('hub.verify_token')
+        challenge = request.args.get('hub.challenge')
+        if token == VERIFY_TOKEN:
+            return challenge, 200
+        return "Invalid verification token", 403
+
+    if request.method == 'POST':
+        data = request.get_json()
+        print("Received WhatsApp message:", data)
+
+        try:
+            message_text = data['entry'][0]['changes'][0]['value']['messages'][0]['text']['body']
+            sender_id = data['entry'][0]['changes'][0]['value']['messages'][0]['from']
+            
+            # Chatbot logic
+            response_text = detect_closest_general_response(message_text)
+            if not response_text:
+                service = detect_closest_service(message_text)
+                if service:
+                    response_text = service["description"]
+                else:
+                    response_text = get_gemini_response(message_text)
+
+            # Here you can integrate sending a response via WhatsApp API (using message templates or session messages)
+            print(f"Responding to {sender_id}: {response_text}")
+            # To actually respond, you'll need to use Meta's send message API here.
+
+        except Exception as e:
+            print("Error handling WhatsApp message:", e)
+
+        return "OK", 200
+
 if __name__ == "__main__":
-    # Bind to the appropriate host and port for Render
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=True)
