@@ -1,69 +1,69 @@
 // =========================
-// 1. SERVICE DATA
+// 1. DATOS DE SERVICIOS
 // =========================
 const services = [
     {
         name: "Limpieza Facial",
         description: "La Limpieza Facial es una técnica que limpia profundamente la piel, eliminando impurezas, células muertas, comedones, exceso de sebo y obstrucciones de los poros.",
-        benefits: "Piel profundamente limpia, hidratada y rejuvenecida, con mayor luminosidad, reducción de puntos negros y una textura más suave",
+        benefits: "Piel profundamente limpia, hidratada y rejuvenecida, con mayor luminosidad, reducción de puntos negros y una textura más suave.",
         sideEffects: "Puede causar enrojecimiento leve, irritación o sensibilidad temporal en la piel, que normalmente desaparecen en pocas horas.",
-        whatsappMessage: "I would like to book an appointment for Facial Cleansing.",
+        whatsappMessage: "Me gustaría agendar una cita para Limpieza Facial.",
         image: "static/images/1. Limpieza Facial/2.jpg"
     },
     {
         name: "Hydrafacial",
-        description: "El Hydrafacial es un tratamiento que hidrata profundamente la piel, exfoliando las células muertas y estimulando la producción de colágeno y elastina",
-        benefits: "Piel más hidratada, suave y luminosa, con reduc ión de líneas de expresión, poros menos visibles y una apariencia rejuvenecida.",
+        description: "El Hydrafacial es un tratamiento que hidrata profundamente la piel, exfoliando las células muertas y estimulando la producción de colágeno y elastina.",
+        benefits: "Piel más hidratada, suave y luminosa, con reducción de líneas de expresión, poros menos visibles y una apariencia rejuvenecida.",
         sideEffects: "Puede causar enrojecimiento leve o sensibilidad temporal, pero generalmente desaparecen en pocas horas.",
-        whatsappMessage: "I would like to book an appointment for Hydrafacial.",
+        whatsappMessage: "Me gustaría agendar una cita para Hydrafacial.",
         image: "static/images/2. hydrafacial/Hydrafacial.jpg"
     },
     {
-        name: "Mesotherapy",
-        description: " La Mesoterapia es un tratamiento preventivo que utiliza microinfiltraciones de sustancias revitalizantes como ácido hialurónico, vitaminas, minerales y aminoácidos para mejorar la textura y luminosidad de la piel.",
+        name: "Mesoterapia",
+        description: "La Mesoterapia es un tratamiento preventivo que utiliza microinfiltraciones de sustancias revitalizantes como ácido hialurónico, vitaminas, minerales y aminoácidos para mejorar la textura y luminosidad de la piel.",
         benefits: "Piel más tersa, luminosa e hidratada, con reducción de líneas de expresión, mejora en la flacidez y un tono más uniforme.",
-        sideEffects: "Puede causar enrojecimiento, hinchazón o pequeños hematomas en la zona tratada, los cuales suelen desaparecer en pocos días.",
-        whatsappMessage: "I would like to book an appointment for Mesotherapy.",
+        sideEffects: "Puede causar enrojecimiento, hinchazón o pequeños hematomas en la zona tratada, que suelen desaparecer en pocos días.",
+        whatsappMessage: "Me gustaría agendar una cita para Mesoterapia.",
         image: "static/images/3. Mesoterapia/4.png"
     },
     {
         name: "Plasma Rico en Plaquetas",
         description: "El Plasma Rico en Plaquetas (PRP) es un tratamiento regenerativo que utiliza el plasma extraído de la sangre del propio paciente para estimular la producción de colágeno, elastina y promover la regeneración celular.",
         benefits: "Reducción de arrugas, mejora en la cicatrización, tratamiento del acné y manchas, y estimulación del crecimiento capilar.",
-        sideEffects: "Puede causar hinchazón, enrojecimiento o pequeñas molestias en el área tratada, que desaparecen en pocos días",
-        whatsappMessage: "I would like to book an appointment for PRP.",
-        image: "static/images/4. Plasma Rico en plaquetas/1.png"
+        sideEffects: "Puede causar hinchazón, enrojecimiento o pequeñas molestias en el área tratada, que desaparecen en pocos días.",
+        whatsappMessage: "Me gustaría agendar una cita para PRP.",
+        image: "static/images/4. Plasma Rico en Plaquetas/1.png"
     },
     {
         name: "Ácido Hialurónico",
         description: "El ácido hialurónico es una sustancia natural que retiene moléculas de agua, ayudando a mantener la hidratación, firmeza y volumen de la piel, disminuyendo los signos del envejecimiento.",
         benefits: "Hidrata profundamente la piel, reduce las arrugas, restaura el volumen perdido y mejora la firmeza, dando un aspecto más joven y radiante.",
         sideEffects: "Puede causar hinchazón, enrojecimiento o pequeños hematomas en las áreas tratadas, que suelen desaparecer en pocos días.",
-        whatsappMessage: "I would like to book an appointment for Botox.",
+        whatsappMessage: "Me gustaría agendar una cita para Botox.",
         image: "static/images/5. Acido Hialuronico/3.jpg"
     },
     {
         name: "Rinomodelación",
-        description: "La rinomodelación es un procedimiento estético no invasivo que utiliza microinyecciones de rellenos dérmicos, como el ácido hialurónico, para modificar sutilmente la forma y el tamaño de la nariz, logrando una apariencia más armoniosa con el rostro",
-        benefits: "Corrige pequeñas imperfecciones, mejora el perfil nasal, eleva la punta y suaviza el dorso de la nariz sin cirugía, obteniendo resultados rápidos y ajustables",
+        description: "La rinomodelación es un procedimiento estético no invasivo que utiliza microinyecciones de rellenos dérmicos, como el ácido hialurónico, para modificar sutilmente la forma y el tamaño de la nariz, logrando una apariencia más armoniosa.",
+        benefits: "Corrige pequeñas imperfecciones, mejora el perfil nasal, eleva la punta y suaviza el dorso de la nariz sin cirugía, obteniendo resultados rápidos y ajustables.",
         sideEffects: "Puede causar hinchazón, enrojecimiento o sensibilidad en el área tratada, que desaparecen en pocos días. Los resultados son temporales.",
-        whatsappMessage: "I would like to book an appointment for Dermal Fillers.",
+        whatsappMessage: "Me gustaría agendar una cita para Rellenos Dérmicos.",
         image: "static/images/6. Rinomodelación/1.jpg"
     },
     {
         name: "Vitamina C E/V",
-        description: "La vitamina C es esencial para la síntesis de colágeno y elastina, ayudando a fortalecer la piel y promover su regeneración mediante la hidroxilación de la prolina y la lisina.",
+        description: "La vitamina C es esencial para la síntesis de colágeno y elastina, ayudando a fortalecer la piel y promover su regeneración.",
         benefits: "Mejora la firmeza y elasticidad de la piel, combate los radicales libres, reduce la inflamación y aclara las manchas, logrando una piel más luminosa y uniforme.",
         sideEffects: "Puede causar enrojecimiento o irritación leve en pieles sensibles, pero generalmente desaparece en pocas horas.",
-        whatsappMessage: "I would like to book an appointment for Laser Hair Removal.",
+        whatsappMessage: "Me gustaría agendar una cita para Depilación Láser.",
         image: "static/images/7. Vitamina C/Vitamica C.jpg"
     },
     {
         name: "Hilos Tensores",
         description: "Los Hilos Tensores son un tratamiento reafirmante que utiliza hilos biocompatibles para levantar y tensar los tejidos faciales, creando un efecto lifting inmediato y estimulando la producción de colágeno y elastina.",
         benefits: "Levanta y redefine el contorno facial, mejora la flacidez y promueve la producción de colágeno para lograr un aspecto rejuvenecido y natural.",
-        sideEffects: "Puede causar hinchazón, hematomas, o enrojecimiento temporal en el área tratada, que suelen desaparecer en pocos días.",
-        whatsappMessage: "I would like to book an appointment for Microdermabrasion.",
+        sideEffects: "Puede causar hinchazón, hematomas o enrojecimiento temporal en el área tratada, que suelen desaparecer en pocos días.",
+        whatsappMessage: "Me gustaría agendar una cita para Microdermoabrasión.",
         image: "static/images/8. Hilos Tensores/3.jpg"
     },
     {
@@ -72,23 +72,23 @@ const services = [
         benefits: "Suaviza las arrugas dinámicas, como las líneas de expresión y las patas de gallo, proporcionando un aspecto más joven y relajado durante varios meses.",
         sideEffects: "Puede causar hinchazón, enrojecimiento o hematomas leves en el área tratada, que generalmente desaparecen en pocos días.",
         precio: "100$",
-        whatsappMessage: "I would like to book an appointment for a Chemical Peel.",
+        whatsappMessage: "Me gustaría agendar una cita para Peeling Químico.",
         image: "static/images/9. Botox/2.jpg"
     },
     {
         name: "Dermapen Facial",
         description: "El Dermapen es un tratamiento regenerativo que utiliza microagujas para crear microcanales en la piel, estimulando la producción natural de colágeno y elastina, y mejorando la textura y tono de la piel.",
-        benefits: " Reduce arrugas, cicatrices de acné y poros dilatados, mejorando la textura, el tono y la apariencia general de la piel.",
+        benefits: "Reduce arrugas, cicatrices de acné y poros dilatados, mejorando la textura, el tono y la apariencia general de la piel.",
         sideEffects: "Puede causar enrojecimiento, sensibilidad o hinchazón leve, que suelen desaparecer en pocos días.",
-        whatsappMessage: "I would like to book an appointment for RF Skin Tightening.",
+        whatsappMessage: "Me gustaría agendar una cita para RF para Reafirmar la Piel.",
         image: "static/images/10. Dermapen Facial/Dermapen.jpg"
     },
     {
-        name: "Micropigmentación de Labios y efecto LIPS.",
+        name: "Micropigmentación de Labios y efecto LIPS",
         description: "La Micropigmentación de Labios es una técnica de maquillaje semipermanente que implanta pigmentos biocompatibles en los labios, definiendo su contorno, corrigiendo asimetrías y proporcionando un color duradero con un efecto voluminoso.",
-        benefits: " Labios más definidos, simétricos y voluminosos, con un color vibrante y duradero sin necesidad de retoques diarios.",
+        benefits: "Labios más definidos, simétricos y voluminosos, con un color vibrante y duradero sin necesidad de retoques diarios.",
         sideEffects: "Puede causar hinchazón, enrojecimiento o sensibilidad temporal en los labios, que desaparecen en pocos días.",
-        whatsappMessage: "I would like to book an appointment for Cryotherapy.",
+        whatsappMessage: "Me gustaría agendar una cita para Crioterapia.",
         image: "static/images/11. Micropigmentación de Labios y efecto LIPS/1.jpg"
     },
     {
@@ -96,7 +96,7 @@ const services = [
         description: "La Micropigmentación de Cejas es una técnica de maquillaje semipermanente que implanta pigmentos biocompatibles en la piel, creando la ilusión de vellos naturales y corrigiendo asimetrías para lograr unas cejas más densas y definidas.",
         benefits: "Cejas más pobladas, simétricas y definidas con un aspecto natural, eliminando la necesidad de retoques diarios y mejorando la apariencia general del rostro.",
         sideEffects: "Puede causar hinchazón, enrojecimiento o sensibilidad leve en el área tratada, los cuales suelen desaparecer en pocos días.",
-        whatsappMessage: "I would like to book an appointment for Body Contouring.",
+        whatsappMessage: "Me gustaría agendar una cita para Contorno Corporal.",
         image: "static/images/12. Micropigmentación de Cejas/3.jpg"
     },
     {
@@ -104,38 +104,38 @@ const services = [
         description: "El Bioestimulador de Colágeno es un tratamiento estético que, mediante la inyección de sustancias biocompatibles, estimula la producción natural de colágeno en la piel, mejorando su firmeza y elasticidad.",
         benefits: "Rellena las arrugas desde el interior, mejora la firmeza y elasticidad de la piel, redensifica los contornos faciales y ofrece resultados naturales y progresivos.",
         sideEffects: "Puede causar hinchazón, enrojecimiento o pequeños hematomas en la zona tratada, que desaparecen en pocos días.",
-        whatsappMessage: "I would like to book an appointment for Tattoo Removal.",
-        image: "static\\images\\13. Bioestimulador de Colageno\\5.jpg"
+        whatsappMessage: "Me gustaría agendar una cita para Eliminación de Tatuajes.",
+        image: "static/images/13. Bioestimulador de Colageno/5.jpg"
     },
     {
-        name: "Limpieza facial for TEENAGERs",
+        name: "Limpieza Facial para Adolescentes",
         description: "La Limpieza Facial para Adolescentes es un tratamiento personalizado que elimina impurezas, exceso de sebo y células muertas, ayudando a prevenir y reducir el acné, espinillas y puntos negros.",
         benefits: "Piel más limpia y equilibrada, con menos impurezas y reducción de la inflamación, contribuyendo a un aspecto más uniforme y saludable.",
         sideEffects: "Puede causar enrojecimiento o irritación leve, que suelen desaparecer rápidamente.",
-        whatsappMessage: "I would like to book an appointment for Cellulite Reduction.",
-        image: "static/images/14. Limpieza facial for TEENAGERs/2.jpg"
+        whatsappMessage: "Me gustaría agendar una cita para Reducción de Celulitis.",
+        image: "static/images/14. Limpieza facial for TEENAGERS/2.jpg"
     },
     {
         name: "Cocktail de la Juventud",
         description: "El Cóctel de la Juventud es un tratamiento intravenoso que combina antioxidantes y nutrientes esenciales como la vitamina C, el glutatión, la coenzima Q10 y la biotina, estimulando la producción de colágeno y elastina para una piel más firme y rejuvenecida.",
-        benefits: " Mejora la firmeza y luminosidad de la piel, combate los signos del envejecimiento, fortalece el sistema inmunológico y proporciona un aumento de energía y vitalidad.",
+        benefits: "Mejora la firmeza y luminosidad de la piel, combate los signos del envejecimiento, fortalece el sistema inmunológico y proporciona un aumento de energía y vitalidad.",
         sideEffects: "Puede causar leves mareos, molestias en el sitio de la infusión o reacciones alérgicas leves, que desaparecen rápidamente.",
-        whatsappMessage: "I would like to book an appointment for Acne Treatment.",
+        whatsappMessage: "Me gustaría agendar una cita para Tratamiento para el Acné.",
         image: "static/images/15. Cocktail de la Juventud/5.jpg"
     }
 ];
 
 
 // =========================
-// 2. AUTO-SLIDING SERVICES
+// 2. DESLIZADO AUTOMÁTICO DE SERVICIOS
 // =========================
 
 function displayService(service) {
     const cardContainer = document.getElementById('service-card-container');
-    cardContainer.style.opacity = '0'; // Fade out effect
+    cardContainer.style.opacity = '0'; // Efecto de desvanecimiento
 
     setTimeout(() => {
-        cardContainer.innerHTML = ''; // Clear the container
+        cardContainer.innerHTML = ''; // Limpiar el contenedor
         const card = document.createElement('div');
         card.className = 'service-card card shadow-lg mb-3';
         card.innerHTML = `
@@ -149,11 +149,10 @@ function displayService(service) {
             </div>
         `;
         cardContainer.appendChild(card);
-        cardContainer.style.opacity = '1'; // Fade in effect
+        cardContainer.style.opacity = '1'; // Efecto de aparición
     }, 500);
 }
 
-// Automatically switch to the next service card every 3 seconds
 let currentServiceIndex = 0;
 function showNextService() {
     currentServiceIndex = (currentServiceIndex + 1) % services.length;
@@ -165,10 +164,9 @@ document.addEventListener("DOMContentLoaded", () => displayService(services[0]))
 
 
 // =========================
-// 3. CHATBOT LOGIC
+// 3. LÓGICA DEL CHATBOT
 // =========================
 
-// Add event listeners for sending messages
 document.getElementById("send-button").addEventListener("click", sendMessage);
 document.getElementById("user-input").addEventListener("keydown", function (event) {
     if (event.key === "Enter") {
@@ -176,7 +174,6 @@ document.getElementById("user-input").addEventListener("keydown", function (even
     }
 });
 
-// Helper to display messages in the chat
 function displayMessage(message, className) {
     const chatBox = document.getElementById("chat-box");
     chatBox.style.display = "block";
@@ -189,11 +186,11 @@ function displayMessage(message, className) {
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
+
 // =========================
-// 3A. IMPROVED FUZZY MATCHING FOR SENTENCES
+// 3A. MEJORA DE COINCIDENCIA FUZZY PARA FRASES
 // =========================
 
-// Function to calculate Levenshtein Distance (Edit Distance)
 function levenshtein(a, b) {
     const tmp = [];
     for (let i = 0; i <= b.length; i++) {
@@ -214,16 +211,21 @@ function levenshtein(a, b) {
     return tmp[b.length][a.length];
 }
 
-// Function to find the closest service name inside a sentence
+function hasBookingIntent(message) {
+    const bookingKeywords = ["book", "appointment", "cita", "reservar"];
+    return bookingKeywords.some(keyword =>
+        message.toLowerCase().includes(keyword)
+    );
+}
+
 function findClosestService(userMessage) {
     let bestMatch = null;
     let bestScore = Infinity;
 
-    const words = userMessage.toLowerCase().split(/\s+/); // Split sentence into words
+    const words = userMessage.toLowerCase().split(/\s+/);
 
     services.forEach(service => {
         const serviceName = service.name.toLowerCase();
-
         words.forEach(word => {
             const distance = levenshtein(word, serviceName);
             if (distance < bestScore) {
@@ -233,43 +235,60 @@ function findClosestService(userMessage) {
         });
     });
 
-    // If the best match is close enough (threshold), return it
-    return bestScore <= 3 ? bestMatch : null;
+    // If bestScore <= 3, we consider it "close enough"
+    // Return both the matched service and the distance for extra logic if needed
+    return { 
+        service: bestScore <= 3 ? bestMatch : null,
+        distance: bestScore
+    };
 }
 
-// Improved function to detect services even inside a sentence
+
 function detectServiceInMessage(userMessage) {
     const lowerCaseMessage = userMessage.toLowerCase();
     
-    // Check if any service name appears in the sentence exactly
-    const detectedService = services.find(service => lowerCaseMessage.includes(service.name.toLowerCase()));
-    if (detectedService) return detectedService;
-    
-    // If no exact match, use fuzzy matching
+    // 1. Exact match check
+    const exactMatch = services.find(service =>
+        lowerCaseMessage.includes(service.name.toLowerCase())
+    );
+    if (exactMatch) {
+        return { service: exactMatch, distance: 0 };
+    }
+
+    // 2. Check if user is just saying "book", "appointment", etc.
+    const bookingKeywords = ["book", "appointment", "cita", "reservar"];
+    const hasBooking = bookingKeywords.some(keyword =>
+        lowerCaseMessage.includes(keyword)
+    );
+    if (hasBooking) {
+        return { service: null, distance: Infinity };
+    }
+
+    // 3. Fuzzy match
     return findClosestService(userMessage);
 }
-
 
 function generateServiceResponse(userMessage, service) {
     const lowerCaseMessage = userMessage.toLowerCase();
 
-    if (lowerCaseMessage.includes("benefits")) {
-        return `The benefits of ${service.name} son: ${service.benefits}`;
+    if (lowerCaseMessage.includes("benefits") || lowerCaseMessage.includes("beneficios")) {
+        return `Los beneficios de ${service.name} son: ${service.benefits}`;
     }
-    if (lowerCaseMessage.includes("side effects") || lowerCaseMessage.includes("side-effects")) {
-        return `The side effects of ${service.name} son: ${service.sideEffects}`;
+    if (lowerCaseMessage.includes("side effects") || lowerCaseMessage.includes("efectos secundarios") || lowerCaseMessage.includes("efectos-secundarios")) {
+        return `Los efectos secundarios de ${service.name} son: ${service.sideEffects}`;
     }
-    if (lowerCaseMessage.includes("description") || lowerCaseMessage.includes("what is")) {
-        return `Here is a description of ${service.name}: ${service.description}`;
+    if (lowerCaseMessage.includes("description") || lowerCaseMessage.includes("qué es") || lowerCaseMessage.includes("descripcion")) {
+        return `Aquí tienes una descripción de ${service.name}: ${service.description}`;
     }
-    if (lowerCaseMessage.includes("precio") || lowerCaseMessage.includes("what is the price")) {
-        return `Precio de ${service.name}: ${service.precio || 'Por favor contáctanos para más detalles.'}`;
+    if (lowerCaseMessage.includes("precio") || lowerCaseMessage.includes("price")) {
+        return `El precio de ${service.name} es: ${service.precio || 'Por favor contáctanos para más detalles.'}`;
     }
-    return `Usted preguntó acerca de ${service.name}. Aquí una breve descripción: ${service.description}`;
+    return `Has preguntado acerca de ${service.name}. Aquí una breve descripción: ${service.description}`;
 }
 
+
 // =========================
-// 3B. LOCAL DICTIONARY
+// 3B. DICCIONARIO LOCAL
 // =========================
 const generalResponses = {
     "hola": "👋 ¡Hola! Soy el chatbot LOOKATME 🤖 ¿En qué puedo ayudarte hoy?",
@@ -316,11 +335,11 @@ const generalResponses = {
     "prp": "💉 PRP utiliza los factores de crecimiento de tu cuerpo para rejuvenecer la piel, reducir arrugas y promover la curación.",
     "manchas oscuras": "🌟 Tratamientos como peelings químicos y terapia láser pueden ayudar a desvanecer las manchas oscuras con el tiempo.",
     "efectos secundarios del botox": "🤔 Los efectos secundarios pueden incluir moretones leves o hinchazón, pero generalmente desaparecen en pocos días.",
-    "contorneado corporal": "💪 Sí, ofrecemos tratamientos de contorneado corporal para ayudarte a moldear y tonificar tu cuerpo sin cirugía.",
+    "contorneado corporal": "💪 Sí, ofrecemos tratamientos de contorno corporal para ayudarte a moldear y tonificar tu cuerpo sin cirugía.",
     "pago en línea": "💻 Sí, ofrecemos opciones de pago en línea seguras cuando reservas tu cita.",
     "piel seca": "💧 Los faciales hidratantes y tratamientos hidratantes son ideales para tratar la piel seca.",
     "frecuencia del botox": "📅 El Botox generalmente dura de 3 a 6 meses. Para mejores resultados, recomendamos tratamientos de mantenimiento cada pocos meses.",
-    "reafirmación rf": "📡 La reafirmación con radiofrecuencia utiliza energía de radiofrecuencia para tensar y levantar la piel, dándote una apariencia más firme y juvenil.",
+    "reafirmación rf": "📡 La reafirmación con radiofrecuencia utiliza energía para tensar y levantar la piel, dándote una apariencia más firme y juvenil.",
     "cuidado de la piel": "🧴 Sí, ofrecemos una gama de productos profesionales para el cuidado de la piel para todo tipo de pieles.",
     "promociones": "🎉 ¡Sí! Ofrecemos ofertas de temporada. Contáctanos o sigue nuestras redes sociales para obtener más información.",
     "depilación láser": "🔦 La depilación láser puede resultar en una reducción permanente del vello después de varias sesiones.",
@@ -374,10 +393,9 @@ function detectGeneralResponse(userMessage) {
 
 
 // =========================
-// 4. GEMINI FALLBACK
+// 4. RESPALDO CON GEMINI
 // =========================
 
-// Modify this function so it returns a Promise that resolves with the text
 function callGeminiAPI(userMessage) {
     return new Promise((resolve, reject) => {
         fetch("/gemini-api", {
@@ -394,42 +412,45 @@ function callGeminiAPI(userMessage) {
             }
         })
         .catch(err => {
-            console.error("Error calling /gemini-api:", err);
+            console.error("Error al llamar a /gemini-api:", err);
             reject("Lo siento, hubo un error al obtener la respuesta.");
         });
     });
 }
 
+
 // =========================
-// 5. MAIN SEND MESSAGE
+// 5. ENVÍO PRINCIPAL DE MENSAJE
 // =========================
 
 function sendMessage() {
     const userInput = document.getElementById("user-input").value;
     if (userInput.trim() === "") return;
 
-    // 1) Show user message immediately
     displayMessage(userInput, "user-message");
-
-    // 2) Show typing animation right away
     const typingDiv = showTypingAnimation();
 
-    // 3) Decide the bot's response
-    const detectedService = detectServiceInMessage(userInput);
+    const detectionResult = detectServiceInMessage(userInput);
+    const detectedService = detectionResult.service;
+    const bestDistance = detectionResult.distance;
     const generalResponse = detectGeneralResponse(userInput);
 
-    // We’ll handle the logic with a small async approach:
     if (detectedService) {
-        // Service found → local answer
+        // The user typed something close to one of your services
         const response = generateServiceResponse(userInput, detectedService);
         finalizeResponse(response, detectedService, typingDiv);
     } 
     else if (generalResponse) {
-        // Found a local known response
+        // A generic response was detected
         finalizeResponse(generalResponse, null, typingDiv);
     } 
+    else if (hasBookingIntent(userInput)) {
+        // The user is asking to book an appointment but didn't mention a specific service
+        const response = "🗓️ ¡Entiendo que deseas agendar una cita! ¿Podrías indicarme el tratamiento que te interesa?";
+        finalizeResponse(response, null, typingDiv);
+    }
     else {
-        // Fallback to Gemini
+        // Fallback to Gemini or your default reply
         callGeminiAPI(userInput)
             .then(geminiResponse => {
                 finalizeResponse(geminiResponse, null, typingDiv);
@@ -439,26 +460,27 @@ function sendMessage() {
             });
     }
 
-    // Clear the input
     document.getElementById("user-input").value = "";
+}
+if (detectedService) {
+    // If distance is > 0, user spelled it incorrectly
+    if (bestDistance > 0) {
+        displayMessage(`¿Quizás quisiste decir "${detectedService.name}"?`, "bot-response");
+    }
+    const response = generateServiceResponse(userInput, detectedService);
+    finalizeResponse(response, detectedService, typingDiv);
 }
 
 
-// This function waits 3 seconds, hides the typing animation, then shows the bot's response
 function finalizeResponse(botResponse, detectedService, typingDiv) {
     setTimeout(() => {
-        // 1) Remove typing indicator
         hideTypingAnimation(typingDiv);
-
-        // 2) Display the real response
         displayMessage(botResponse, "bot-response");
 
-        // 3) If it's a service, show the "Reservar cita" button
         if (detectedService) {
             displayBookAppointmentButtonInChat(detectedService);
         }
 
-        // 4) Show contact/misc options in chat
         const options = [
             { label: "Asistente virtual LOOKATME", value: "virtual-assistant" },
             { label: "Personal (WhatsApp)", value: "personal-whatsapp" },
@@ -466,22 +488,18 @@ function finalizeResponse(botResponse, detectedService, typingDiv) {
         ];
         displayOptions(options);
 
-    }, 3000); // <-- 3 seconds
+    }, 3000);
 }
 
 
 // =========================
-// 6. TYPING INDICATOR
+// 6. INDICADOR DE ESCRITURA
 // =========================
 
-// Shows the 3-dot typing animation in the chat
 function showTypingAnimation() {
     const chatBox = document.getElementById("chat-box");
-    // Create a DIV that looks like a bot message
     const typingDiv = document.createElement("div");
-    typingDiv.className = "message bot-response"; // or any class you prefer
-
-    // Insert the 3-dot animation HTML
+    typingDiv.className = "message bot-response";
     typingDiv.innerHTML = `
         <div class="typing-indicator">
             <span></span>
@@ -489,13 +507,11 @@ function showTypingAnimation() {
             <span></span>
         </div>
     `;
-
     chatBox.appendChild(typingDiv);
     chatBox.scrollTop = chatBox.scrollHeight;
-    return typingDiv; // Return this so we can remove it later
+    return typingDiv;
 }
 
-// Removes the typing indicator from the chat
 function hideTypingAnimation(typingDiv) {
     if (typingDiv && typingDiv.parentNode) {
         typingDiv.parentNode.removeChild(typingDiv);
@@ -504,7 +520,7 @@ function hideTypingAnimation(typingDiv) {
 
 
 // =========================
-// 7. APPOINTMENT BUTTON
+// 7. BOTÓN PARA RESERVAR CITA
 // =========================
 
 function displayBookAppointmentButtonInChat(service) {
@@ -513,7 +529,6 @@ function displayBookAppointmentButtonInChat(service) {
     bookButton.textContent = `Reservar cita para ${service.name}`;
     bookButton.className = "btn btn-outline-primary btn-sm mt-3";
 
-    // Call the same openCalendarPopup function
     bookButton.addEventListener("click", function () {
         openCalendarPopup(service.name);
     });
@@ -522,12 +537,11 @@ function displayBookAppointmentButtonInChat(service) {
 
 
 // =========================
-// 8. DISPLAYING CONTACT OPTIONS
+// 8. OPCIONES DE CONTACTO
 // =========================
 
 function displayOptions(options) {
     const chatBox = document.getElementById("chat-box");
-    // If there's already an options container, don't duplicate
     if (document.querySelector('.options-container')) return;
 
     const optionsContainer = document.createElement("div");
@@ -557,43 +571,22 @@ function handleOptionSelection(optionValue) {
         displayMessage("¿Qué servicio le gustaría seleccionar?", "bot-response");
         displayImage('static/images/fotor-ai-2024100710376.jpg');
     } else if (optionValue === 'personal-whatsapp') {
-        const whatsappURL = "https://wa.me/51981640627?text=Hello%2C%20I%20would%20like%20to%20inquire%20about%20your%20services.";
+        const whatsappURL = "https://wa.me/51981640627?text=Hola%2C%20me%20gustaría%20consultar%20sobre%20sus%20servicios.";
         window.open(whatsappURL, '_blank');
     } else if (optionValue === 'email-lookatme') {
-        window.location.href = "mailto:estetic-lookatme@gmail.com?subject=Service Inquiry&body=Hello, I would like to know more about your services.";
+        window.location.href = "mailto:estetic-lookatme@gmail.com?subject=Consulta%20de%20Servicios&body=Hola,%20me%20gustaría%20preguntar%20sobre%20sus%20servicios.";
     }
 }
 
 
 // =========================
-// 9. CALENDAR POPUP (Optional)
+// 9. POPUP DE CALENDARIO
 // =========================
 
 function openCalendarPopup(serviceName) {
-    // Option 1: Directly open a static Google Calendar link:
     window.open('https://calendar.app.google/DiFczsWq41uW7TnG6', '_blank');
-    
-    // Option 2 (more advanced): Pass the serviceName into a pre-filled Calendar event
-    // (uncomment if you want to use pre-filled date/time)
-    /*
-    const startDate = new Date(); // e.g., now
-    const endDate = new Date(Date.now() + 60 * 60 * 1000); // 1 hour later
-
-    function formatDate(date) {
-      // Convert date to YYYYMMDDTHHMMSSZ (no punctuation)
-      return date.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
-    }
-
-    const startStr = formatDate(startDate);
-    const endStr = formatDate(endDate);
-
-    const calendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(serviceName)}&dates=${startStr}/${endStr}&location=My+Clinic+Address`;
-    window.open(calendarUrl, '_blank');
-    */
 }
 
-
-// Helper to display an image in chat
 function displayImage(imageSrc) {
     const chatBox = document.getElementById("chat-box");
     const imageElement = document.createElement("img");
@@ -602,4 +595,3 @@ function displayImage(imageSrc) {
     chatBox.appendChild(imageElement);
     chatBox.scrollTop = chatBox.scrollHeight;
 }
-
