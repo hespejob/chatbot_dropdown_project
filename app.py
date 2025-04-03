@@ -3,7 +3,7 @@ from flask import Flask, request, render_template, jsonify
 from fuzzywuzzy import fuzz, process
 import os
 
-app = Flask(_name_)
+app = Flask(__name__)
 
 # WhatsApp Config
 ACCESS_TOKEN = "EAAZABMTzly0UBOZCwY69XvB6U1SSz4pC0VW5oaZC0PfGV5s4YuSV5cZBNE0UtlT2LLhi9H89gl7BKvPsXE2sHTZA4TwIjJNZA97rq92zKdcmrRXXQzf5tOROZAkj7r3XREhkGGihbsrOpohCPTxTo3xQv5BUcuPiZBhGOJ0ZBwmfpOD767P4Eumv1dtheD90mufylMJ4aUvw0MCo424vssgPfFNVsjQZDZD"
