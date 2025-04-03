@@ -22,7 +22,7 @@ services_data = [
 general_responses = {
     "hola": "¡Hola! ¿En qué puedo ayudarte hoy?",
     "saludo": "¡Hola! No dudes en preguntarme sobre cualquiera de nuestros servicios.",
-    "contacto": "Puedes contactarnos al ‪‪+51 981640627‬‬.",
+    "contacto": "Puedes contactarnos al +51 981640627.",
     "ubicación": "Estamos ubicados en 123 Main Street, Lima, Perú.",
     "servicios": "Ofrecemos servicios como Limpieza Facial, Hydrafacial, Mesoterapia y más.",
     "precio": "Los precios varían según el servicio. Contáctanos para más detalles."
@@ -33,11 +33,11 @@ GEMINI_API_KEY = "AIzaSyCocRQfyEnaKBB7bsHvgYO9hkeKSPN0pFI"
 
 def get_gemini_response(prompt):
     prompt += "\n\nPor favor, responde en español."
-    url = f"‪https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=‬{GEMINI_API_KEY}"
+    url = f"https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}"
     headers = {"Content-Type": "application/json"}
     payload = {"contents": [{"parts": [{"text": prompt}]}]}
     try:
-        r = ‪requests.post‬(url, json=payload, headers=headers)
+        r = requests.post(url, json=payload, headers=headers)
         return r.json()["candidates"][0]["content"]["parts"][0]["text"]
     except Exception as e:
         print("Gemini error:", e)
@@ -57,7 +57,7 @@ def detect_closest_general_response(msg):
 
 # ✅ WhatsApp message sender
 def send_whatsapp_message(recipient_id, message_text):
-    url = f"‪https://graph.facebook.com/v17.0/‬{PHONE_NUMBER_ID}/messages"
+    url = f"https://graph.facebook.com/v17.0/{PHONE_NUMBER_ID}/messages"
     headers = {
         "Authorization": f"Bearer {ACCESS_TOKEN}",
         "Content-Type": "application/json"
@@ -69,7 +69,7 @@ def send_whatsapp_message(recipient_id, message_text):
         "text": {"body": message_text}
     }
     try:
-        response = ‪requests.post‬(url, headers=headers, json=payload)
+        response = requests.post(url, headers=headers, json=payload)
         print("Message sent:", response.status_code, response.text)
     except Exception as e:
         print("Sending error:", e)
@@ -89,7 +89,7 @@ def gemini_api():
 @app.route('/submit-appointment', methods=["POST"])
 def submit_appointment():
     response = "¡Gracias! Ahora confirmaremos los detalles a través de WhatsApp."
-    whatsapp_link = "‪https://api.whatsapp.com/send?phone=51981640627&text=Confirmación%20de%20cita‬"
+    whatsapp_link = "https://api.whatsapp.com/send?phone=51981640627&text=Confirmación%20de%20cita"
     return jsonify({"response": response, "whatsapp_link": whatsapp_link})
 
 @app.route('/webhook', methods=['GET', 'POST'])
@@ -116,6 +116,6 @@ def webhook():
             print("Webhook error:", e)
         return "OK", 200
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, debug=True)
+    app.run(host="0.0.0.0", port=port,debug=True)
