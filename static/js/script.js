@@ -113,7 +113,7 @@ const services = [
         benefits: "Piel más limpia y equilibrada, con menos impurezas y reducción de la inflamación, contribuyendo a un aspecto más uniforme y saludable.",
         sideEffects: "Puede causar enrojecimiento o irritación leve, que suelen desaparecer rápidamente.",
         whatsappMessage: "Me gustaría agendar una cita para Reducción de Celulitis.",
-        image: "static/images/14. limpieza Facial for TEENAGERS/2.jpg"
+        image: "static/images/14. Limpieza facial for TEENAGERS/2.jpg"
     },
     {
         name: "Cocktail de la Juventud",
@@ -595,3 +595,8 @@ function displayImage(imageSrc) {
     chatBox.appendChild(imageElement);
     chatBox.scrollTop = chatBox.scrollHeight;
 }
+
+
+
+
+
