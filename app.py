@@ -12,11 +12,111 @@ VERIFY_TOKEN = "tokenchatbot"
 
 # Services Data
 services_data = [
-    {"name": "Limpieza Facial", "description": "La limpieza facial ayuda a limpiar profundamente tu piel, eliminando la suciedad y el exceso de sebo para una piel más clara."},
-    {"name": "Hydrafacial", "description": "Hydrafacial proporciona hidratación y exfoliación, dejando tu piel radiante y fresca."},
-    {"name": "Mesoterapia", "description": "La mesoterapia es un tratamiento preventivo que enriquece la piel con vitaminas e hidratación."},
-    {"name": "Plasma Rico en Plaquetas", "description": "El PRP revitaliza la piel usando factores de crecimiento de tu propio cuerpo."},
-    # (You can keep the rest of the services here)
+    {
+        "name": "Limpieza Facial",
+        "description": "La limpieza facial ayuda a limpiar profundamente tu piel, eliminando la suciedad y el exceso de sebo para una piel más clara.",
+        "benefits": "Piel limpia, hidratada y luminosa.",
+        "sideEffects": "Puede causar enrojecimiento temporal.",
+        "precio": "S/ 100"
+    },
+    {
+        "name": "Hydrafacial",
+        "description": "Hydrafacial proporciona hidratación y exfoliación, dejando tu piel radiante y fresca.",
+        "benefits": "Hidratación profunda, piel más suave y luminosa.",
+        "sideEffects": "Enrojecimiento leve o sensibilidad temporal.",
+        "precio": "S/ 180"
+    },
+    {
+        "name": "Mesoterapia",
+        "description": "La mesoterapia es un tratamiento preventivo que enriquece la piel con vitaminas e hidratación.",
+        "benefits": "Rejuvenecimiento facial, piel más firme y nutrida.",
+        "sideEffects": "Enrojecimiento, picazón o hematomas leves.",
+        "precio": "S/ 150"
+    },
+    {
+        "name": "Plasma Rico en Plaquetas",
+        "description": "El PRP revitaliza la piel utilizando los factores de crecimiento de tu propio cuerpo.",
+        "benefits": "Regeneración celular, mejora de textura y brillo.",
+        "sideEffects": "Hinchazón, sensibilidad temporal.",
+        "precio": "S/ 250"
+    },
+    {
+        "name": "Botox",
+        "description": "El Botox suaviza arrugas y líneas finas, proporcionando una apariencia más juvenil y fresca.",
+        "benefits": "Suaviza arrugas dinámicas y líneas de expresión.",
+        "sideEffects": "Hinchazón o moretones leves en el área tratada.",
+        "precio": "S/ 300"
+    },
+    {
+        "name": "Rellenos Dérmicos",
+        "description": "Los rellenos dérmicos restauran el volumen facial y reducen las arrugas.",
+        "benefits": "Rostro más definido, reducción de arrugas profundas.",
+        "sideEffects": "Inflamación o hematomas leves.",
+        "precio": "S/ 350"
+    },
+    {
+        "name": "Depilación Láser",
+        "description": "La depilación láser reduce permanentemente el vello no deseado.",
+        "benefits": "Piel suave y sin vello por más tiempo.",
+        "sideEffects": "Irritación leve, enrojecimiento temporal.",
+        "precio": "Desde S/ 90 por zona"
+    },
+    {
+        "name": "Microdermoabrasión",
+        "description": "Exfoliación mecánica que renueva la superficie de la piel.",
+        "benefits": "Mejora la textura y el tono de la piel.",
+        "sideEffects": "Enrojecimiento leve.",
+        "precio": "S/ 120"
+    },
+    {
+        "name": "Peeling Químico",
+        "description": "Elimina las células muertas y revela una piel más suave.",
+        "benefits": "Rejuvenecimiento cutáneo, reduce manchas.",
+        "sideEffects": "Descamación, sensibilidad temporal.",
+        "precio": "S/ 140"
+    },
+    {
+        "name": "RF para Reafirmar la Piel",
+        "description": "Radiofrecuencia que reafirma y levanta la piel sin cirugía.",
+        "benefits": "Piel más firme, mejora de flacidez.",
+        "sideEffects": "Calor leve o enrojecimiento.",
+        "precio": "S/ 160"
+    },
+    {
+        "name": "Crioterapia",
+        "description": "Tratamiento con frío para tonificar y reafirmar la piel.",
+        "benefits": "Efecto lifting inmediato, piel revitalizada.",
+        "sideEffects": "Sensación de frío intenso temporal.",
+        "precio": "S/ 110"
+    },
+    {
+        "name": "Contorno Corporal",
+        "description": "Moldea y tonifica el cuerpo sin cirugía.",
+        "benefits": "Reduce grasa localizada, mejora firmeza.",
+        "sideEffects": "Enrojecimiento leve, sensación de calor.",
+        "precio": "Desde S/ 180"
+    },
+    {
+        "name": "Eliminación de Tatuajes",
+        "description": "Tecnología láser para eliminar tatuajes de manera segura.",
+        "benefits": "Desvanecimiento progresivo del tatuaje.",
+        "sideEffects": "Sensación de ardor, enrojecimiento temporal.",
+        "precio": "Desde S/ 200 por sesión"
+    },
+    {
+        "name": "Reducción de Celulitis",
+        "description": "Tratamientos para suavizar la piel y reducir la celulitis.",
+        "benefits": "Piel más lisa y firme.",
+        "sideEffects": "Leve sensibilidad o enrojecimiento.",
+        "precio": "S/ 150"
+    },
+    {
+        "name": "Tratamiento para el Acné",
+        "description": "Combate las causas fundamentales del acné.",
+        "benefits": "Reducción de brotes y marcas.",
+        "sideEffects": "Sensibilidad en pieles reactivas.",
+        "precio": "S/ 130"
+    }
 ]
 
 general_responses = {
@@ -25,14 +125,13 @@ general_responses = {
     "contacto": "Puedes contactarnos al +51 981640627.",
     "ubicación": "Estamos ubicados en 123 Main Street, Lima, Perú.",
     "servicios": "Ofrecemos servicios como Limpieza Facial, Hydrafacial, Mesoterapia y más.",
-    "precio": "Los precios varían según el servicio. Contáctanos para más detalles."
+    "precio": "Los precios varían según el servicio y la duración. Contáctanos para más detalles."
 }
-
-# Gemini Integration
+# Gemini API Config
 GEMINI_API_KEY = "AIzaSyCocRQfyEnaKBB7bsHvgYO9hkeKSPN0pFI"
 
 def get_gemini_response(prompt):
-    prompt += "\n\nPor favor, responde en español."
+    prompt += "\n\nActua como un experto en Tratamiento facial, responde en español."
     url = f"https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}"
     headers = {"Content-Type": "application/json"}
     payload = {"contents": [{"parts": [{"text": prompt}]}]}
@@ -40,10 +139,9 @@ def get_gemini_response(prompt):
         r = requests.post(url, json=payload, headers=headers)
         return r.json()["candidates"][0]["content"]["parts"][0]["text"]
     except Exception as e:
-        print("Gemini error:", e)
         return "Lo siento, no puedo responder en este momento."
 
-# Fuzzy Logic Helpers
+# Fuzzy logic
 def detect_closest_service(msg):
     names = [s['name'] for s in services_data]
     best, score = process.extractOne(msg.lower(), names, scorer=fuzz.token_sort_ratio)
@@ -55,7 +153,21 @@ def detect_closest_general_response(msg):
     best, score = process.extractOne(msg.lower(), general_responses.keys(), scorer=fuzz.token_sort_ratio)
     return general_responses[best] if score > 60 else None
 
-# ✅ WhatsApp message sender
+# Nuevo: Generador de respuesta de servicio
+def generate_service_response(user_msg, service):
+    msg = user_msg.lower()
+    if "benefits" in msg or "beneficios" in msg:
+        return f"Los beneficios de {service['name']} son: {service.get('benefits', 'Información no disponible')}."
+    elif "side effects" in msg or "efectos secundarios" in msg or "efectos-secundarios" in msg:
+        return f"Los efectos secundarios de {service['name']} son: {service.get('sideEffects', 'Información no disponible')}."
+    elif "precio" in msg or "price" in msg:
+        return f"El precio de {service['name']} es: {service.get('precio', 'Por favor contáctanos para más detalles.')}."
+    elif "qué es" in msg or "descripcion" in msg or "description" in msg:
+        return f"Aquí tienes una descripción de {service['name']}: {service['description']}."
+    else:
+        return f"Has preguntado acerca de {service['name']}. Aquí una breve descripción: {service['description']}."
+
+# Enviar mensaje a WhatsApp
 def send_whatsapp_message(recipient_id, message_text):
     url = f"https://graph.facebook.com/v17.0/{PHONE_NUMBER_ID}/messages"
     headers = {
@@ -74,7 +186,7 @@ def send_whatsapp_message(recipient_id, message_text):
     except Exception as e:
         print("Sending error:", e)
 
-# Routes
+# Rutas
 @app.route('/')
 def home():
     return render_template("index.html", services=services_data)
@@ -109,7 +221,10 @@ def webhook():
             response_text = detect_closest_general_response(message_text)
             if not response_text:
                 service = detect_closest_service(message_text)
-                response_text = service["description"] if service else get_gemini_response(message_text)
+                if service:
+                    response_text = generate_service_response(message_text, service)
+                else:
+                    response_text = get_gemini_response(message_text)
 
             send_whatsapp_message(sender_id, response_text)
         except Exception as e:
@@ -118,4 +233,4 @@ def webhook():
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port,debug=True)
+    app.run(host="0.0.0.0", port=port, debug=True)
