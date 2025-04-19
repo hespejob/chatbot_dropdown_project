@@ -218,12 +218,17 @@ def webhook():
             message_text = data['entry'][0]['changes'][0]['value']['messages'][0]['text']['body']
             sender_id = data['entry'][0]['changes'][0]['value']['messages'][0]['from']
 
-            response_text = detect_closest_general_response(message_text)
-            if not response_text:
-                service = detect_closest_service(message_text)
-                if service:
-                    response_text = generate_service_response(message_text, service)
+            # First, try to detect if the query is about a specific service.
+            service = detect_closest_service(message_text)
+            if service:
+                response_text = generate_service_response(message_text, service)
+            else:
+                # Next, check if there's a general response.
+                general_response = detect_closest_general_response(message_text)
+                if general_response:
+                    response_text = general_response
                 else:
+                    # If none of the above, fall back to Gemini.
                     response_text = get_gemini_response(message_text)
 
             send_whatsapp_message(sender_id, response_text)
