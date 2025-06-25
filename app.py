@@ -1,12 +1,13 @@
+import os
+import hashlib
+import hmac
 import requests
 from flask import Flask, request, render_template, jsonify
-from fuzzywuzzy import fuzz, process
-import os
 
 app = Flask(__name__)
 
-# WhatsApp Config
-ACCESS_TOKEN = "EAAZABMTzly0UBOZCk7HL6PcSVGZCJ1b429YFNlMYZCSSmmhnzxYY6yigZA0U2125ykPp5MA2FHnCZCf8mtZBnNeOQtwn0T8vVsZC8Js7XN2AGVZBRZBXPsfysYMlu0q0KIDBpbyzam8yZAZCo0bXOZCeZC7ZBAOwRUbMHwEuLARVcaPA9RMcpiLbZAF8uvZBJ3npWq79E1obrzKt0UUyhh7CbISw7wxiXOaBJ"
+# WhatsApp Configa
+ACCESS_TOKEN = "EAAZABMTzly0UBOZCwY69XvB6U1SSz4pC0VW5oaZC0PfGV5s4YuSV5cZBNE0UtlT2LLhi9H89gl7BKvPsXE2sHTZA4TwIjJNZA97rq92zKdcmrRXXQzf5tOROZAkj7r3XREhkGGihbsrOpohCPTxTo3xQv5BUcuPiZBhGOJ0ZBwmfpOD767P4Eumv1dtheD90mufylMJ4aUvw0MCo424vssgPfFNVsjQZDZD"
 PHONE_NUMBER_ID = "622394210957095"
 VERIFY_TOKEN = "tokenchatbot"
 
@@ -130,44 +131,38 @@ general_responses = {
 # Gemini API Config
 GEMINI_API_KEY = "AIzaSyCocRQfyEnaKBB7bsHvgYO9hkeKSPN0pFI"
 
+# ─── 3. GEMINI FALLBACK ─────────────────────────────────────────────────────────
 def get_gemini_response(prompt):
-    prompt += "\n\nActua como un experto en Tratamiento facial, responde en español."
+    prompt += "\n\nActúa como un experto en Tratamiento facial, responde en español."
     url = f"https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}"
     headers = {"Content-Type": "application/json"}
     payload = {"contents": [{"parts": [{"text": prompt}]}]}
     try:
-        r = requests.post(url, json=payload, headers=headers)
+        r = requests.post(url, json=payload, headers=headers, timeout=5)
         return r.json()["candidates"][0]["content"]["parts"][0]["text"]
-    except Exception as e:
+    except Exception:
         return "Lo siento, no puedo responder en este momento."
 
-# Fuzzy logic
-def detect_closest_service(msg):
-    names = [s['name'] for s in services_data]
-    best, score = process.extractOne(msg.lower(), names, scorer=fuzz.token_sort_ratio)
-    if score > 60:
-        return next(s for s in services_data if s['name'].lower() == best.lower())
-    return None
+# ─── 4. VERIFY WHATSAPP SIGNATURE ──────────────────────────────────────────────
+def verify_signature(request):
+    signature = request.headers.get("X-Hub-Signature-256", "")
+    body = request.get_data()
+    expected = hmac.new(VERIFY_TOKEN.encode(), body, hashlib.sha256).hexdigest()
+    return signature == f"sha256={expected}"
 
-def detect_closest_general_response(msg):
-    best, score = process.extractOne(msg.lower(), general_responses.keys(), scorer=fuzz.token_sort_ratio)
-    return general_responses[best] if score > 60 else None
+# ─── 5. FALLBACK TO YOUR HOSTED BOT ─────────────────────────────────────────────
+def ask_hosted_bot(message_text):
+    try:
+        resp = requests.post(
+            "https://lookatmechatbot.onrender.com/respond",
+            json={"message": message_text},
+            timeout=5
+        )
+        return resp.json().get("reply", "Lo siento, no obtuve respuesta del bot.")
+    except Exception:
+        return "Lo siento, hubo un error al contactar al bot externo."
 
-# Nuevo: Generador de respuesta de servicio
-def generate_service_response(user_msg, service):
-    msg = user_msg.lower()
-    if "benefits" in msg or "beneficios" in msg:
-        return f"Los beneficios de {service['name']} son: {service.get('benefits', 'Información no disponible')}."
-    elif "side effects" in msg or "efectos secundarios" in msg or "efectos-secundarios" in msg:
-        return f"Los efectos secundarios de {service['name']} son: {service.get('sideEffects', 'Información no disponible')}."
-    elif "precio" in msg or "price" in msg:
-        return f"El precio de {service['name']} es: {service.get('precio', 'Por favor contáctanos para más detalles.')}."
-    elif "qué es" in msg or "descripcion" in msg or "description" in msg:
-        return f"Aquí tienes una descripción de {service['name']}: {service['description']}."
-    else:
-        return f"Has preguntado acerca de {service['name']}. Aquí una breve descripción: {service['description']}."
-
-# Enviar mensaje a WhatsApp
+# ─── 6. SEND VIA WHATSAPP CLOUD API ────────────────────────────────────────────
 def send_whatsapp_message(recipient_id, message_text):
     url = f"https://graph.facebook.com/v17.0/{PHONE_NUMBER_ID}/messages"
     headers = {
@@ -180,13 +175,14 @@ def send_whatsapp_message(recipient_id, message_text):
         "type": "text",
         "text": {"body": message_text}
     }
-    try:
-        response = requests.post(url, headers=headers, json=payload)
-        print("Message sent:", response.status_code, response.text)
-    except Exception as e:
-        print("Sending error:", e)
+    for _ in range(2):
+        r = requests.post(url, headers=headers, json=payload, timeout=5)
+        if r.status_code == 200:
+            return True
+    app.logger.error("WhatsApp send failed: %s %s", r.status_code, r.text)
+    return False
 
-# Rutas
+# ─── 7. FLASK ROUTES ────────────────────────────────────────────────────────────
 @app.route('/')
 def home():
     return render_template("index.html", services=services_data)
@@ -196,46 +192,68 @@ def gemini_api():
     data = request.get_json()
     user_prompt = data.get("message", "").strip()
     reply = get_gemini_response(user_prompt)
-    return jsonify({"response": reply or "No se pudo obtener respuesta."})
+    return jsonify({"response": reply})
 
-@app.route('/submit-appointment', methods=["POST"])
+@app.route('/submit-appointment', methods=['POST'])
 def submit_appointment():
-    response = "¡Gracias! Ahora confirmaremos los detalles a través de WhatsApp."
-    whatsapp_link = "https://api.whatsapp.com/send?phone=51981640627&text=Confirmación%20de%20cita"
-    return jsonify({"response": response, "whatsapp_link": whatsapp_link})
+    return jsonify({
+        "response": "¡Gracias! Ahora confirmaremos los detalles a través de WhatsApp.",
+        "whatsapp_link": "https://api.whatsapp.com/send?phone=51981640627&text=Confirmación%20de%20cita"
+    })
 
 @app.route('/webhook', methods=['GET', 'POST'])
 def webhook():
     if request.method == 'GET':
-        token = request.args.get('hub.verify_token')
+        token   = request.args.get('hub.verify_token')
         challenge = request.args.get('hub.challenge')
         return (challenge, 200) if token == VERIFY_TOKEN else ("Token inválido", 403)
 
-    if request.method == 'POST':
-        data = request.get_json()
-        print("WhatsApp message received:", data)
-        try:
-            message_text = data['entry'][0]['changes'][0]['value']['messages'][0]['text']['body']
-            sender_id = data['entry'][0]['changes'][0]['value']['messages'][0]['from']
+    if not verify_signature(request):
+        return "Firma inválida", 403
 
-            # First, try to detect if the query is about a specific service.
-            service = detect_closest_service(message_text)
-            if service:
-                response_text = generate_service_response(message_text, service)
+    data = request.get_json()
+    app.logger.debug("Incoming webhook data: %s", data)
+    try:
+        msg    = data['entry'][0]['changes'][0]['value']['messages'][0]['text']['body']
+        sender = data['entry'][0]['changes'][0]['value']['messages'][0]['from']
+
+        # 1) Try to match a service by fuzzy name
+        best, score = process.extractOne(
+            msg.lower(),
+            [s['name'] for s in services_data],
+            scorer=fuzz.token_sort_ratio
+        )
+        service = next((s for s in services_data if s['name'].lower() == best.lower()), None) if score > 60 else None
+
+        # 2) Build the reply
+        if service:
+            # simple service response logic:
+            if "beneficios" in msg.lower():
+                reply = f"Los beneficios de {service['name']} son: {service['benefits']}."
+            elif "efectos" in msg.lower():
+                reply = f"Los efectos secundarios de {service['name']} son: {service['sideEffects']}."
+            elif "precio" in msg.lower():
+                reply = f"El precio de {service['name']} es: {service['precio']}."
             else:
-                # Next, check if there's a general response.
-                general_response = detect_closest_general_response(message_text)
-                if general_response:
-                    response_text = general_response
-                else:
-                    # If none of the above, fall back to Gemini.
-                    response_text = get_gemini_response(message_text)
+                reply = f"Aquí tienes información sobre {service['name']}: {service['description']}"
+        else:
+            # 3) general keyword map
+            gr_best, gr_score = process.extractOne(
+                msg.lower(),
+                list(general_responses.keys()),
+                scorer=fuzz.token_sort_ratio
+            )
+            if gr_score > 60:
+                reply = general_responses[gr_best]
+            else:
+                # 4) fallback to your hosted bot
+                reply = ask_hosted_bot(msg)
 
-            send_whatsapp_message(sender_id, response_text)
-        except Exception as e:
-            print("Webhook error:", e)
-        return "OK", 200
+        send_whatsapp_message(sender, reply)
+    except Exception as e:
+        app.logger.error("Error processing webhook: %s", e)
+
+    return "OK", 200
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, debug=True)
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)), debug=True)
