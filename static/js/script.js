@@ -125,165 +125,75 @@ const services = [
     }
 ];
 
-
-// =========================
-// 2. DESLIZADO AUTOMÁTICO DE SERVICIOS
-// =========================
-
+// ─── 2. AUTO-SLIDER ──────────────────────────────────────────────────────────────
+let currentServiceIndex = 0;
 function displayService(service) {
     const cardContainer = document.getElementById('service-card-container');
-    cardContainer.style.opacity = '0'; // Efecto de desvanecimiento
-
+    cardContainer.style.opacity = '0';
     setTimeout(() => {
-        cardContainer.innerHTML = ''; // Limpiar el contenedor
-        const card = document.createElement('div');
-        card.className = 'service-card card shadow-lg mb-3';
-        card.innerHTML = `
-            <img src="${service.image}" class="card-img-top" alt="${service.name}">
-            <div class="card-body">
-                <h5 class="card-title">${service.name}</h5>
-                <p class="card-text">${service.description}</p>
-                <button class="btn btn-outline-primary btn-sm" onclick="openCalendarPopup('${service.name}')">
-                    Reservar cita
-                </button>
-            </div>
-        `;
-        cardContainer.appendChild(card);
-        cardContainer.style.opacity = '1'; // Efecto de aparición
+        cardContainer.innerHTML = `
+            <div class="service-card card shadow-lg mb-3">
+                <img src="${service.image}" class="card-img-top" alt="${service.name}">
+                <div class="card-body">
+                    <h5 class="card-title">${service.name}</h5>
+                    <p class="card-text">${service.description}</p>
+                    <button class="btn btn-outline-primary btn-sm" onclick="openCalendarPopup('${service.name}')">
+                        Reservar cita
+                    </button>
+                </div>
+            </div>`;
+        cardContainer.style.opacity = '1';
     }, 500);
 }
-
-let currentServiceIndex = 0;
 function showNextService() {
     currentServiceIndex = (currentServiceIndex + 1) % services.length;
     displayService(services[currentServiceIndex]);
 }
-
-setInterval(showNextService, 3000);
-document.addEventListener("DOMContentLoaded", () => displayService(services[0]));
-
-
-// =========================
-// 3. LÓGICA DEL CHATBOT
-// =========================
-
-document.getElementById("send-button").addEventListener("click", sendMessage);
-document.getElementById("user-input").addEventListener("keydown", function (event) {
-    if (event.key === "Enter") {
-        sendMessage();
-    }
+document.addEventListener("DOMContentLoaded", () => {
+    displayService(services[0]);
+    setInterval(showNextService, 3000);
 });
 
-function displayMessage(message, className) {
-    const chatBox = document.getElementById("chat-box");
-    chatBox.style.display = "block";
-
-    const messageDiv = document.createElement("div");
-    messageDiv.className = `message ${className}`;
-    messageDiv.textContent = message;
-
-    chatBox.appendChild(messageDiv);
-    chatBox.scrollTop = chatBox.scrollHeight;
-}
-
-
-// =========================
-// 3A. MEJORA DE COINCIDENCIA FUZZY PARA FRASES
-// =========================
-
+// ─── 3. CHATBOT LOGIC ──────────────────────────────────────────────────────────
 function levenshtein(a, b) {
     const tmp = [];
-    for (let i = 0; i <= b.length; i++) {
-        tmp[i] = [i];
-    }
-    for (let j = 0; j <= a.length; j++) {
-        tmp[0][j] = j;
-    }
+    for (let i = 0; i <= b.length; i++) tmp[i] = [i];
+    for (let j = 0; j <= a.length; j++) tmp[0][j] = j;
     for (let i = 1; i <= b.length; i++) {
         for (let j = 1; j <= a.length; j++) {
-            if (b.charAt(i - 1) === a.charAt(j - 1)) {
-                tmp[i][j] = tmp[i - 1][j - 1];
-            } else {
-                tmp[i][j] = Math.min(tmp[i - 1][j - 1] + 1, Math.min(tmp[i][j - 1] + 1, tmp[i - 1][j] + 1));
-            }
+            tmp[i][j] = b[i-1] === a[j-1]
+                ? tmp[i-1][j-1]
+                : Math.min(tmp[i-1][j-1]+1, tmp[i][j-1]+1, tmp[i-1][j]+1);
         }
     }
     return tmp[b.length][a.length];
 }
-
-function hasBookingIntent(message) {
-    const bookingKeywords = ["book", "appointment", "cita", "reservar"];
-    return bookingKeywords.some(keyword =>
-        message.toLowerCase().includes(keyword)
-    );
-}
-
-function findClosestService(userMessage) {
-    let bestMatch = null;
-    let bestScore = Infinity;
-
-    const words = userMessage.toLowerCase().split(/\s+/);
-
-    services.forEach(service => {
-        const serviceName = service.name.toLowerCase();
-        words.forEach(word => {
-            const distance = levenshtein(word, serviceName);
-            if (distance < bestScore) {
-                bestScore = distance;
-                bestMatch = service;
+function detectServiceInMessage(msg) {
+    const lower = msg.toLowerCase();
+    // exact match
+    let exact = services.find(s => lower.includes(s.name.toLowerCase()));
+    if (exact) return { service: exact, distance: 0 };
+    // fuzzy
+    const words = lower.split(/\s+/);
+    let best = null, bestScore = Infinity;
+    services.forEach(s => {
+        words.forEach(w => {
+            const d = levenshtein(w, s.name.toLowerCase());
+            if (d < bestScore) {
+                bestScore = d;
+                best = s;
             }
         });
     });
-
-    // If bestScore <= 3, we consider it "close enough"
-    // Return both the matched service and the distance for extra logic if needed
-    return { 
-        service: bestScore <= 3 ? bestMatch : null,
-        distance: bestScore
-    };
+    return { service: bestScore <= 3 ? best : null, distance: bestScore };
 }
-
-
-function detectServiceInMessage(userMessage) {
-    const lowerCaseMessage = userMessage.toLowerCase();
-    
-    // 1. Exact match check
-    const exactMatch = services.find(service =>
-        lowerCaseMessage.includes(service.name.toLowerCase())
-    );
-    if (exactMatch) {
-        return { service: exactMatch, distance: 0 };
+function detectGeneralResponse(msg) {
+    const lower = msg.toLowerCase();
+    const keys = Object.keys(generalResponses);
+    for (let k of keys) {
+        if (lower.includes(k)) return generalResponses[k];
     }
-
-    // 2. Check if user is just saying "book", "appointment", etc.
-    const bookingKeywords = ["book", "appointment", "cita", "reservar"];
-    const hasBooking = bookingKeywords.some(keyword =>
-        lowerCaseMessage.includes(keyword)
-    );
-    if (hasBooking) {
-        return { service: null, distance: Infinity };
-    }
-
-    // 3. Fuzzy match
-    return findClosestService(userMessage);
-}
-
-function generateServiceResponse(userMessage, service) {
-    const lowerCaseMessage = userMessage.toLowerCase();
-
-    if (lowerCaseMessage.includes("benefits") || lowerCaseMessage.includes("beneficios")) {
-        return `Los beneficios de ${service.name} son: ${service.benefits}`;
-    }
-    if (lowerCaseMessage.includes("side effects") || lowerCaseMessage.includes("efectos secundarios") || lowerCaseMessage.includes("efectos-secundarios")) {
-        return `Los efectos secundarios de ${service.name} son: ${service.sideEffects}`;
-    }
-    if (lowerCaseMessage.includes("description") || lowerCaseMessage.includes("qué es") || lowerCaseMessage.includes("descripcion")) {
-        return `Aquí tienes una descripción de ${service.name}: ${service.description}`;
-    }
-    if (lowerCaseMessage.includes("precio") || lowerCaseMessage.includes("price")) {
-        return `El precio de ${service.name} es: ${service.precio || 'Por favor contáctanos para más detalles.'}`;
-    }
-    return `Has preguntado acerca de ${service.name}. Aquí una breve descripción: ${service.description}`;
+    return null;
 }
 
 
@@ -381,221 +291,87 @@ const generalResponses = {
     "volumen": "💉 Los rellenos ayudan a restaurar el volumen perdido y dan un aspecto juvenil."
 };
 
-function detectGeneralResponse(userMessage) {
-    const lowerCaseMessage = userMessage.toLowerCase();
-    for (let keyword in generalResponses) {
-        if (lowerCaseMessage.includes(keyword)) {
-            return generalResponses[keyword];
-        }
-    }
-    return null;
+function generateServiceResponse(msg, service) {
+    const lower = msg.toLowerCase();
+    if (lower.includes("beneficios"))    return `Beneficios de ${service.name}: ${service.benefits}`;
+    if (lower.includes("efectos"))       return `Efectos secundarios de ${service.name}: ${service.sideEffects}`;
+    if (lower.includes("descripcion"))   return `Descripción de ${service.name}: ${service.description}`;
+    if (lower.includes("precio"))        return `Precio de ${service.name}: ${service.precio || 'consúltanos'}`;
+    return `Aquí info sobre ${service.name}: ${service.description}`;
 }
-
-
-// =========================
-// 4. RESPALDO CON GEMINI
-// =========================
-
-function callGeminiAPI(userMessage) {
-    return new Promise((resolve, reject) => {
-        fetch("/gemini-api", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message: userMessage })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.response) {
-                resolve(data.response);
-            } else {
-                resolve("Lo siento, no pude obtener una respuesta de Gemini.");
-            }
-        })
-        .catch(err => {
-            console.error("Error al llamar a /gemini-api:", err);
-            reject("Lo siento, hubo un error al obtener la respuesta.");
-        });
-    });
-}
-
-
-// =========================
-// 5. ENVÍO PRINCIPAL DE MENSAJE
-// =========================
-
-function sendMessage() {
-    const userInput = document.getElementById("user-input").value;
-    if (userInput.trim() === "") return;
-
-    displayMessage(userInput, "user-message");
-    const typingDiv = showTypingAnimation();
-
-    const detectionResult = detectServiceInMessage(userInput);
-    const detectedService = detectionResult.service;
-    const bestDistance = detectionResult.distance;
-    const generalResponse = detectGeneralResponse(userInput);
-
-    if (detectedService) {
-        // The user typed something close to one of your services
-        const response = generateServiceResponse(userInput, detectedService);
-        finalizeResponse(response, detectedService, typingDiv);
-    } 
-    else if (generalResponse) {
-        // A generic response was detected
-        finalizeResponse(generalResponse, null, typingDiv);
-    } 
-    else if (hasBookingIntent(userInput)) {
-        // The user is asking to book an appointment but didn't mention a specific service
-        const response = "🗓️ ¡Entiendo que deseas agendar una cita! ¿Podrías indicarme el tratamiento que te interesa?";
-        finalizeResponse(response, null, typingDiv);
-    }
-    else {
-        // Fallback to Gemini or your default reply
-        callGeminiAPI(userInput)
-            .then(geminiResponse => {
-                finalizeResponse(geminiResponse, null, typingDiv);
-            })
-            .catch(() => {
-                finalizeResponse("Lo siento, hubo un error al obtener la respuesta.", null, typingDiv);
-            });
-    }
-
-    document.getElementById("user-input").value = "";
-}
-if (detectedService) {
-    // If distance is > 0, user spelled it incorrectly
-    if (bestDistance > 0) {
-        displayMessage(`¿Quizás quisiste decir "${detectedService.name}"?`, "bot-response");
-    }
-    const response = generateServiceResponse(userInput, detectedService);
-    finalizeResponse(response, detectedService, typingDiv);
-}
-
-
-function finalizeResponse(botResponse, detectedService, typingDiv) {
-    setTimeout(() => {
-        hideTypingAnimation(typingDiv);
-        displayMessage(botResponse, "bot-response");
-
-        if (detectedService) {
-            displayBookAppointmentButtonInChat(detectedService);
-        }
-
-        const options = [
-            { label: "Asistente virtual LOOKATME", value: "virtual-assistant" },
-            { label: "Personal (WhatsApp)", value: "personal-whatsapp" },
-            { label: "Email (estetic-lookatme@gmail.com)", value: "email-lookatme" }
-        ];
-        displayOptions(options);
-
-    }, 3000);
-}
-
-
-// =========================
-// 6. INDICADOR DE ESCRITURA
-// =========================
 
 function showTypingAnimation() {
-    const chatBox = document.getElementById("chat-box");
-    const typingDiv = document.createElement("div");
-    typingDiv.className = "message bot-response";
-    typingDiv.innerHTML = `
-        <div class="typing-indicator">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-    `;
-    chatBox.appendChild(typingDiv);
-    chatBox.scrollTop = chatBox.scrollHeight;
-    return typingDiv;
+    const chat = document.getElementById("chat-box");
+    const t = document.createElement("div");
+    t.className = "message bot-response typing-indicator";
+    t.innerHTML = `<span></span><span></span><span></span>`;
+    chat.appendChild(t);
+    chat.scrollTop = chat.scrollHeight;
+    return t;
 }
-
-function hideTypingAnimation(typingDiv) {
-    if (typingDiv && typingDiv.parentNode) {
-        typingDiv.parentNode.removeChild(typingDiv);
-    }
+function hideTypingAnimation(el) {
+    if (el && el.parentNode) el.parentNode.removeChild(el);
 }
-
-
-// =========================
-// 7. BOTÓN PARA RESERVAR CITA
-// =========================
-
-function displayBookAppointmentButtonInChat(service) {
-    const chatBox = document.getElementById("chat-box");
-    const bookButton = document.createElement("button");
-    bookButton.textContent = `Reservar cita para ${service.name}`;
-    bookButton.className = "btn btn-outline-primary btn-sm mt-3";
-
-    bookButton.addEventListener("click", function () {
-        openCalendarPopup(service.name);
-    });
-    chatBox.appendChild(bookButton);
+function displayMessage(txt, cls) {
+    const chat = document.getElementById("chat-box");
+    chat.style.display = "block";
+    const m = document.createElement("div");
+    m.className = `message ${cls}`;
+    m.textContent = txt;
+    chat.appendChild(m);
+    chat.scrollTop = chat.scrollHeight;
 }
-
-
-// =========================
-// 8. OPCIONES DE CONTACTO
-// =========================
-
-function displayOptions(options) {
-    const chatBox = document.getElementById("chat-box");
-    if (document.querySelector('.options-container')) return;
-
-    const optionsContainer = document.createElement("div");
-    optionsContainer.className = "options-container mt-3";
-
-    options.forEach(option => {
-        const optionButton = document.createElement("button");
-        optionButton.className = "btn btn-outline-primary option-btn btn-sm";
-        optionButton.textContent = option.label;
-        optionButton.onclick = function () {
-            handleOptionSelection(option.value);
-        };
-        optionsContainer.appendChild(optionButton);
-    });
-
-    chatBox.appendChild(optionsContainer);
-    chatBox.scrollTop = chatBox.scrollHeight;
-}
-
-function handleOptionSelection(optionValue) {
-    const optionsContainer = document.querySelector('.options-container');
-    if (optionsContainer) {
-        optionsContainer.remove();
-    }
-
-    if (optionValue === 'virtual-assistant') {
-        displayMessage("¿Qué servicio le gustaría seleccionar?", "bot-response");
-        displayImage('static/images/fotor-ai-2024100710376.jpg');
-    } else if (optionValue === 'personal-whatsapp') {
-        const whatsappURL = "https://wa.me/51981640627?text=Hola%2C%20me%20gustaría%20consultar%20sobre%20sus%20servicios.";
-        window.open(whatsappURL, '_blank');
-    } else if (optionValue === 'email-lookatme') {
-        window.location.href = "mailto:estetic-lookatme@gmail.com?subject=Consulta%20de%20Servicios&body=Hola,%20me%20gustaría%20preguntar%20sobre%20sus%20servicios.";
-    }
-}
-
-
-// =========================
-// 9. POPUP DE CALENDARIO
-// =========================
 
 function openCalendarPopup(serviceName) {
     window.open('https://calendar.app.google/DiFczsWq41uW7TnG6', '_blank');
 }
 
-function displayImage(imageSrc) {
-    const chatBox = document.getElementById("chat-box");
-    const imageElement = document.createElement("img");
-    imageElement.src = imageSrc;
-    imageElement.className = "assistant-image";
-    chatBox.appendChild(imageElement);
-    chatBox.scrollTop = chatBox.scrollHeight;
+function finalizeResponse(response, service, typingEl) {
+    setTimeout(() => {
+        hideTypingAnimation(typingEl);
+        displayMessage(response, "bot-response");
+        if (service) {
+            const btn = document.createElement("button");
+            btn.className = "btn btn-outline-primary btn-sm mt-2";
+            btn.textContent = `Reservar cita para ${service.name}`;
+            btn.onclick = () => openCalendarPopup(service.name);
+            document.getElementById("chat-box").appendChild(btn);
+        }
+    }, 1000);
 }
 
+function sendMessage() {
+    const inp = document.getElementById("user-input");
+    const text = inp.value.trim();
+    if (!text) return;
+    displayMessage(text, "user-message");
+    inp.value = "";
+    const typingEl = showTypingAnimation();
+
+    const { service } = detectServiceInMessage(text);
+    const general = detectGeneralResponse(text);
+
+    if (service) {
+        const resp = generateServiceResponse(text, service);
+        finalizeResponse(resp, service, typingEl);
+    } else if (general) {
+        finalizeResponse(general, null, typingEl);
+    } else {
+        // Fallback → send to your Flask webhook which will relay via WhatsApp
+        fetch('/webhook', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: text })
+        })
+        .then(() => finalizeResponse("✉️ Te respondo por WhatsApp en breve.", null, typingEl))
+        .catch(() => finalizeResponse("Lo siento, hubo un error al enviar tu mensaje.", null, typingEl));
+    }
+}
+
+document.getElementById("send-button").onclick = sendMessage;
+document.getElementById("user-input").addEventListener("keydown", e => {
+    if (e.key === "Enter") sendMessage();
+});
 
 
 
