@@ -198,7 +198,7 @@ def gemini_api():
 def submit_appointment():
     return jsonify({
         "response": "¡Gracias! Ahora confirmaremos los detalles a través de WhatsApp.",
-        "whatsapp_link": "https://api.whatsapp.com/send?phone=51981640627&text=Confirmación%20de%20cita"
+        "whatsapp_link": "https://api.whatsapp.com/send?phone=51997410933&text=Confirmación%20de%20cita"
     })
 
 @app.route('/webhook', methods=['GET', 'POST'])
